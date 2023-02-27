@@ -35,7 +35,5 @@ Use `yarn test` to start headless server and tests. You can also just test singl
 
 ## Contact
 For further question: 
-- +41 (0)31 311 17 06 -> eonum contact
 - [info@eonum.ch](info@eonum.ch) -> eonum contact
-- [jan.koch@students.unibe.ch](jan.koch@students.unibe.ch) -> university development team
 - [eonum.ch/de/kontakt/](https://eonum.ch/de/kontakt/) -> eonum website
