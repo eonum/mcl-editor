@@ -29,7 +29,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "jest --runInBand",
-    "startHeadlessOnTestPort": "BROWSER=none PORT=$npm_package_config_testPort npm start",
+    "startHeadlessOnTestPort": "BROWSER=none PORT=$npm_package_config_testPort yarn start",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {

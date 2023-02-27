@@ -1,5 +1,4 @@
 import React from 'react';
-import './style.css';
 import ExampleComponent from "./Components/ExampleComponent";
 export default function App() {
     return (
