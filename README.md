@@ -2,11 +2,15 @@
 
 ## Brief description
 
+## Libraries
+- Peggy for parser (use typescript) https://github.com/peggyjs/peggy.
+- Codemirror https://codemirror.net/ or Monaco editor https://microsoft.github.io/monaco-editor/.
+- Integrate Editor in react app (using typescript).
+
 ## Coding conventions / requirements
-- React app with typescript (if possible also for parser library).
 - Use functional components together with react hooks wherever possible
 - Use camelCase notation (classes are PascalCase).
-- Constants are always uppercase.
+- Compile time constants (not keyword const) are always uppercase.
 - All components reside in their own subdirectory in `/src/Components`.
 - All services reside in their own subdirectory in `/src/Services`.
 - All test-suites reside in their own subdirectory in `/src/__test_`.
