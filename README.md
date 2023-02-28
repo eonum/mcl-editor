@@ -6,6 +6,7 @@
 - Peggy for parser (use typescript) https://github.com/peggyjs/peggy.
 - Codemirror https://codemirror.net/ or Monaco editor https://microsoft.github.io/monaco-editor/.
 - Integrate Editor in react app (using typescript).
+- Bootstrap for styling.
 
 ## Coding conventions / requirements
 - Use functional components together with react hooks wherever possible
@@ -16,7 +17,8 @@
 - All test-suites reside in their own subdirectory in `/src/__test_`.
 - Every method has its own documentation written in Javadoc.
 - Write everything in English (comments, variable names, function names, ...).
-- Try to use self declaring code (f.e. method & variable names) and 
+- Use self declaring code (f.e. method & variable names). 
+
 ## Setup
 ### Development
 Use `yarn` command to install all packages and dependencies from package.json.
