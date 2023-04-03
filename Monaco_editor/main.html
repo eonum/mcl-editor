@@ -1,0 +1,69 @@
+<!-- Load the Monaco editor -->
+<script src="https://unpkg.com/monaco-editor@0.25.2/min/vs/loader.js"></script>
+
+<!-- Initialize the Monaco editor -->
+<script>
+  require.config({ paths: { 'vs': 'https://unpkg.com/monaco-editor@0.25.2/min/vs' }});
+  require(['vs/editor/editor.main'], function() {
+    var editor = monaco.editor.create(document.getElementById('container'), {
+      value: '',
+      language: 'mylang',
+      lineNumbers: false
+    });
+
+    // Timer used for delay in output
+    let timerId;
+    let lastValue = "";
+
+    /**
+     * Throttle and debounce function for better performance
+     * <a href="https://www.youtube.com/watch?v=cjIswDCKgu0"> Youtube Video </a>
+     * @param value (string): The content that should be logged.
+     * @param delay (number): The amount of time before the editor's content is output. Default is 1 second delay.
+     * @param throttleDelay (number): The amount of time before the editor's content is output when typing slowly. Default is 300 milliseconds.
+     */
+    function throttleAndDebounceLogEditorValue(value, delay = 1000, throttleDelay = 300) {
+      // Throttle
+      /**
+       * This statement checks whether timerId is currently null or not. 
+       * If timerId is null, it means that no timer has been set, so we can go ahead and log the editor value. 
+       * If timerId is not null, it means that a timer has already been set, and we don't want to log the editor value again until the timer has completed.
+       */
+      if (!timerId) {
+        console.log(editor.getValue());
+        timerId = setTimeout(() => {
+          timerId = null;
+        }, throttleDelay);
+      }
+
+      // Debounce
+      /**
+       * This statement checks whether the current editor value, newVal, is different from the previous editor value, lastVal. 
+       * If the values are the same, it means that nothing has changed since the last time the function was called, so we don't need to do anything. 
+       * If the values are different, it means that the editor content has been updated, and we need to start the throttle timer again.
+       */
+      if (value != lastValue) {
+        clearTimeout(timerId);
+        timerId = setTimeout(() => {
+          console.log(editor.getValue());
+          timerId = null;
+        }, delay);
+        lastValue = value;
+      }
+    }
+
+    // Call this method whenever the content of the editor is changed
+    editor.onDidChangeModelContent(() => {
+      throttleAndDebounceLogEditorValue(editor.getValue());
+    });
+    
+  });
+</script>
+
+<!-- load language -->
+<script src="./mylang.js"></script>
+
+<!-- This is the visual code editor box -->
+<div style="border: 3px solid #ccc; padding: 5px; max-width: 600px;">
+  <div id="container" style="height: 50px; box-sizing: border-box;"></div>
+</div>
