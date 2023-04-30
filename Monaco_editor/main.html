@@ -56,7 +56,12 @@
     editor.onDidChangeModelContent(() => {
       throttleAndDebounceLogEditorValue(editor.getValue());
     });
-    
+
+    // Get the current value of the editor
+    editor.onDidChangeModelContent(() => {
+    parseInput(editor.getValue());
+    });
+
   });
 </script>
 
@@ -65,5 +70,24 @@
 
 <!-- This is the visual code editor box -->
 <div style="border: 3px solid #ccc; padding: 5px; max-width: 600px;">
-  <div id="container" style="height: 50px; box-sizing: border-box;"></div>
+  <div id="container" style="height: 50px; box-sizing: border-box;"></div> 
 </div>
+
+<script src = "medcodelogic.js"></script>
+	<script>
+
+		function parseInput(valueMonaco) {
+		
+			// Call function from our parser (peg$parse) with the user input as a parameter
+			try {
+				var result = peg$parse(valueMonaco);
+				document.getElementById("output").innerHTML = result;
+			} catch (e) {
+				document.getElementById("output").innerHTML = "Error: " + e.message;
+			}
+		}
+	</script>
+<br><br><br><br><br><br><br><br><br><br><br><br>
+<div id="output"></div>
+
+
