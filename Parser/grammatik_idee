@@ -1,0 +1,107 @@
+start = expression {return text()}
+
+expression
+= simple_expression space*  and_or* space*
+
+and_or =
+(('and'/'or') space* simple_expression space*)
+
+simple_expression =
+(Comparison / calculation / in_list / in_table / function / Variable) space*
+
+Variable =
+(date_or_variableDate / number_or_variableNumber / string_or_variableString)
+
+calculation =
+(number_or_variableNumber) space* (('+'/'-'/'*'/'/') space* (number_or_variableNumber))+
+
+Comparison =
+((NumberCompare / StringCompare / DateCompare)) / (lparen (NumberCompare / StringCompare / DateCompare) rparen)
+
+StringCompare =
+(string_or_variableString space* operator space* string_or_variableString) 
+
+NumberCompare =
+(number_or_variableNumber space* operator space* number_or_variableNumber)
+
+DateCompare =
+(date_or_variableDate space* operator space* date_or_variableDate)
+
+in_list =
+(number_or_variableNumber / string_or_variableString) space* 'not'? space* 'in list' space* code_list space*
+
+in_table =
+(number_or_variableNumber / string_or_variableString) space* 'not'? space* 'in table' space* table_list space*
+
+function =
+space* (dates / min_max / where / sides / not) space*
+
+dates =
+'dates' lparen list rparen  space*
+
+min_max =
+('min'/'max') lparen list rparen
+
+where =
+Variable 'where' space* Comparison space*
+
+sides =
+'sides' lparen list ',' space* ('L' / 'R' / 'B') rparen
+
+not = 
+'not' space* Comparison space*
+
+list =
+'list'
+
+code_list =
+lparen space* code (space* ',' space* code space* )* space* rparen
+
+table_list =
+lparen space* table (space* ',' space* table space* )* space* rparen
+
+number_or_variableNumber =
+(variableNumber / number)
+
+string_or_variableString =
+(variableString / String)
+
+date_or_variableDate =
+(variableDate / Date)
+
+Date =
+'date' space* lparen '"' [0-9]|8| '"' rparen space*
+
+variableString = 
+'string'/'String'
+
+variableNumber = 
+'number'/'Number'
+
+variableDate =
+'date' / 'Date'
+
+table =
+'table' / 'Table'
+
+code = 
+'code' / 'Code'
+
+String =
+'' [_a-zA-Z]* ''
+
+number = 
+('-'? [0-9]+ '.' [0-9]*) space*
+
+operator =
+'>=' / '<=' / '>' / '<' / '=' / '!='
+
+
+lparen =
+'(' space*
+
+rparen =
+')' space*
+
+space = 
+" " / [\t\n\r]
