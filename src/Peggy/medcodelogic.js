@@ -8,8 +8,8 @@
 
 //import variablesJson from '.variables.json'
 
-const variablesJson = require('./variables.json')
-const tablesJson = require('./tables.json')
+const variablesJson = require('../../variables.json')
+const tablesJson = require('../../tables.json')
 var currentGlobalDataType;
 var currentGlobalVariableName;
 var currentGlobalData;
@@ -347,7 +347,7 @@ function peg$parse(input, options) {
   var peg$e39 = peg$classExpectation(["\t", "\n", "\r"], false, false);
   var peg$e40 = peg$classExpectation([["0", "9"], ["a", "z"], ["A", "Z"], "_"], false, false);
 
-  var peg$f0 = function(expression) {return arrayToString(expression)};
+  var peg$f0 = function(expression) {return "hallo"};
   var peg$f1 = function(variableName) {return isStringVariable(variableName) };
   var peg$f2 = function(variableName) {return arrayToString(variableName)};
   var peg$f3 = function(variableName) {return isNumberVariable(variableName) };
