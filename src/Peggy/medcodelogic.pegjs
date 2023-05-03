@@ -96,8 +96,7 @@ const arrayToString = (arr) => {
 }}
 
 start
-= expression:expression {return "hallo"}
-//= expression:expression {return arrayToString(expression)}
+= expression:expression {return arrayToString(expression)}
 
 expression
 = simpleExpression _ and_or* _ 
