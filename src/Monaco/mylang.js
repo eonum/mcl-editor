@@ -380,6 +380,10 @@ require(['vs/editor/editor.main'], function() {
     },
   ];
   
+  /**
+   * Everything that relies on the completion of the loadingprocess for the myLangVariables and myLangTables is put in here
+   * This ensures that the loading process is completed before continuing.
+   */
   Promise.all([loadTablesFromJSON(tabFilePath), loadVariablesFromJSON(varFilePath)]).then(() => {
     console.log("Tables & Variables after loading")
     console.log(mylangTables);
@@ -497,6 +501,7 @@ require(['vs/editor/editor.main'], function() {
         });
 
         // Cuts of if there are too many options
+        /** @todo Check if there is a better way to handle this. The problem is if there are too many options, just one is shown at the moment */
         if(filteredSuggestions.length > maxOptions){
           filteredSuggestions = filteredSuggestions.slice(0,maxOptions);
         }
