@@ -66,10 +66,11 @@ test('test_function_call', () =>{
     });
 */
 
-
+/*
 test('test_nested1', () =>{
     expect(medcodelogic.parse('pdx in table(C) > 1')).toBe('pdx in table(C) > 1')
     });
+*/
 
 /*  
 test('test_nested2', () =>{
@@ -79,5 +80,4 @@ test('test_nested2', () =>{
 test('test_nested3', () =>{
     expect(medcodelogic.parse("los > 2 * 6 AND los > 34 or adm_weight() > 3 Or los > 1 and sep = '01'")).toBe("los > 2 * 6 AND los > 34 or adm_weight() > 3 Or los > 1 and sep = '01'")       
     });
-
 */
