@@ -20,6 +20,7 @@
 - Use self declaring code (f.e. method & variable names). 
 
 ## Setup
+### Monaco Editor
 Running the `/Monacco/main.html` requires the "live server" extension.
 To run it: right click `/Monacco/main.html` and click open with live server.
 
