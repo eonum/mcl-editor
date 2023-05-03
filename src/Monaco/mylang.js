@@ -16,6 +16,10 @@ require(['vs/editor/editor.main'], function() {
         mylangTables = Object.entries(tabData); // Transforms everything into an Object.
         mylangTables = mylangTables.map((tables) => tables[1]); // Cuts off the name.
         mylangTables = [].concat(...mylangTables);  // Concatenate all the tables into one array.
+
+        console.log("Original Tables before transformation")
+        console.log(mylangTables)
+
         // Transforms the mylangTables into a Monaco Element
         mylangTables = mylangTables.map(t => {
           return {
@@ -42,19 +46,32 @@ require(['vs/editor/editor.main'], function() {
         // mylangVariables = varData;
         mylangVariables = Object.entries(varData);  // Transforms everything into an Object.
         mylangVariables = mylangVariables.map(variables => variables[1]);  // Cuts off the name.
+
+        console.log("Original Variables before transformation")
+        console.log(mylangVariables)
+
         // Transforms the mylangVariables into a Monaco Element
         mylangVariables = mylangVariables.map(v => {
+          // Set the correct documentation
+          let options = ""
+          if(!v.is_enum){
+            options = "\nAlles vom Typ " + v.variable_type
+          }
+          else{
+            //options = v.values
+            let count = 1;
+            for(opt of v.values_de){
+              options += "\n" + count + ") " + opt;
+              count += 1;
+            }
+          }
+
           return {
             label: v.field_name,
             kind: monaco.languages.CompletionItemKind.Variable,
             insertText: v.field_name,
-            documentation: 
-              "DE: " + v.name_de + "\n" + 
-              "FR: " + v.name_fr + "\n" +
-              "IT: " + v.name_it + "\n" +
-              "\n" +
-              "Operator options: " + v.operators_option_list + "\n" +
-              "Variable type: " + v.variable_type
+            detail: v.name_de,
+            documentation: "Mögliche Werte : " + options
           };
         })
       })
@@ -364,8 +381,9 @@ require(['vs/editor/editor.main'], function() {
   ];
   
   Promise.all([loadTablesFromJSON(tabFilePath), loadVariablesFromJSON(varFilePath)]).then(() => {
-    console.log(mylangVariables);
+    console.log("Tables & Variables after loading")
     console.log(mylangTables);
+    console.log(mylangVariables);
   
     // Register a tokens provider for the language
     monaco.languages.setMonarchTokensProvider('mylang', {
@@ -374,10 +392,8 @@ require(['vs/editor/editor.main'], function() {
       
       typeKeywords: mylangTypeKeywords.map(tkw => tkw.label),
 
-      /** @todo properly map the variables */
       variables: mylangVariables.map(variable => variable.label),
 
-      /** @todo properly map the tables */
       tables: mylangTables.map(table => table.label),
       
       operators: [
@@ -463,7 +479,7 @@ require(['vs/editor/editor.main'], function() {
     // Responsible for the autocompletion
     monaco.languages.registerCompletionItemProvider('mylang', {
       provideCompletionItems: function(model, position) {
-        //the maximum options being suggested
+        // The maximum options being suggested.
         const maxOptions = 10
         
         // Get the current word and its range
@@ -515,11 +531,10 @@ require(['vs/editor/editor.main'], function() {
         if(!filteredToolTip){
           return null;
         }
-        else{
-          return {
-            range: range,
-            contents: [{value: filteredToolTip[0].documentation}]
-          }
+        
+        return {
+          range: range,
+          contents: [{value: filteredToolTip[0].documentation}] // Get the first of the options and show documentation as tooltip
         }
 
       }
