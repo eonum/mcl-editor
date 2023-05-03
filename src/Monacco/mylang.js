@@ -60,7 +60,7 @@ require(['vs/editor/editor.main'], function() {
   const mylangFunctions = [
     { 
       label: 'inList', 
-      kind: monaco.languages.CompletionItemKind.Function, 
+      kind: monaco.languages.CompletionItemKind.Function,
       insertText: 'inList()', 
       documentation: [
         'Beschreibung',
@@ -353,7 +353,23 @@ require(['vs/editor/editor.main'], function() {
             label: v.field_name,
             kind: monaco.languages.CompletionItemKind.Variable,
             insertText: v.field_name,
-            detail: v.name_de
+            /*
+              detail is used to provide a short, one-line description of the completion item. 
+              It is typically used to display information such as the return type of a function, 
+              the type of a variable, or a summary of what the completion item represents.
+            */
+            detail: "",
+            /*
+              documentation, on the other hand, is used to provide more detailed information about the completion item. 
+              It can be a longer text that describes what the completion item does, how to use it, or any other relevant information.
+            */
+            documentation: 
+              "DE: " + v.name_de + "\n" + 
+              "FR: " + v.name_fr + "\n" +
+              "IT: " + v.name_it + "\n" +
+              "\n" +
+              "Operator options: " + v.operators_option_list + "\n" +
+              "Variable type: " + v.variable_type
           };
         })).concat(mylangTables.map(t => {
           return {
