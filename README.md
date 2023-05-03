@@ -21,8 +21,8 @@
 
 ## Setup
 ### Monaco Editor
-Running the `/Monacco/main.html` requires the "live server" extension.
-To run it: right click `/Monacco/main.html` and click open with live server.
+Running the `/Monaco/main.html` requires the "live server" extension.
+To run it: right click `/Monaco/main.html` and click open with live server.
 
 monaco editor:
 https://microsoft.github.io/monaco-editor/monarch.html
