@@ -105,7 +105,7 @@ and_or
 = (('and'i/'or'i) _ simpleExpression _)
 
 simpleExpression
-= (comparison / calculation / inList / inTable / function /variable) _
+= (comparison / calculation / inList / inTable / function / variable) _
 
 comparison 
 = ((dateCompare /numberCompare / stringCompare / codeCompare) _ / (lparen (numberCompare / stringCompare / dateCompare) rparen)) _
