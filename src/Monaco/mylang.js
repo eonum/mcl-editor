@@ -538,7 +538,6 @@ require(['vs/editor/editor.main'], function() {
         }
 
       }
-
     });
 
   })

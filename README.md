@@ -21,11 +21,10 @@
 
 ## Setup
 ### Monaco Editor
+https://microsoft.github.io/monaco-editor/monarch.html
+
 Running the `/Monaco/main.html` requires the "live server" extension.
 To run it: right click `/Monaco/main.html` and click open with live server.
-
-monaco editor:
-https://microsoft.github.io/monaco-editor/monarch.html
 
 ### Development
 Use `yarn` command to install all packages and dependencies from package.json.
@@ -50,3 +49,7 @@ Use `yarn test` to start headless server and tests. You can also just test singl
 For further question: 
 - [info@eonum.ch](info@eonum.ch) -> eonum contact
 - [eonum.ch/de/kontakt/](https://eonum.ch/de/kontakt/) -> eonum website
+
+## Monaco
+- See [this](https://microsoft.github.io/monaco-editor/typedoc/enums/languages.CompletionItemKind.html) for additional information about the CompletionItemKind
+- See [this](https://microsoft.github.io/monaco-editor/typedoc/interfaces/languages.CompletionItem.html#documentation) for additional information about CompletionItems
