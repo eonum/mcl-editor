@@ -20,6 +20,12 @@
 - Use self declaring code (f.e. method & variable names). 
 
 ## Setup
+Running the `/Monacco/main.html` requires the "live server" extension.
+To run it: right click `/Monacco/main.html` and click open with live server.
+
+monaco editor:
+https://microsoft.github.io/monaco-editor/monarch.html
+
 ### Development
 Use `yarn` command to install all packages and dependencies from package.json.
 Use `yarn start` to start local dev server.
