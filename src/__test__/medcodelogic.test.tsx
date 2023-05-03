@@ -15,7 +15,7 @@
  * 
  **/
 
-const medcodelogic    = require('../../medcodelogic.js');
+const medcodelogic    = require('../Peggy/medcodelogic.js');
 
 test('arrayToStringConversion', () =>{
     // mock array
