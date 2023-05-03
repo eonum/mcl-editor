@@ -12,8 +12,8 @@
 
 //import variablesJson from '.variables.json'
 
-const variablesJson = require('./variables.json')
-const tablesJson = require('./tables.json')
+const variablesJson = require('../../variables.json')
+const tablesJson = require('../../tables.json')
 var currentGlobalDataType;
 var currentGlobalVariableName;
 var currentGlobalData;
@@ -96,7 +96,8 @@ const arrayToString = (arr) => {
 }}
 
 start
-= expression:expression {return arrayToString(expression)}
+= expression:expression {return "hallo"}
+//= expression:expression {return arrayToString(expression)}
 
 expression
 = simpleExpression _ and_or* _ 
@@ -105,7 +106,7 @@ and_or
 = (('and'i/'or'i) _ simpleExpression _)
 
 simpleExpression
-= (comparison / calculation / inList / inTable / function /variable) _
+= (comparison / calculation / inList / inTable / function / variable) _
 
 comparison 
 = ((dateCompare /numberCompare / stringCompare / codeCompare) _ / (lparen (numberCompare / stringCompare / dateCompare) rparen)) _
