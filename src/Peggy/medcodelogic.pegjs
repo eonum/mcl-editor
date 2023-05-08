@@ -1,5 +1,6 @@
 /**
-  * WICHTIG: Es werden solange Regeln geprüft, bis eine Regel komplett matched.
+  * AndrinBranche
+  WICHTIG: Es werden solange Regeln geprüft, bis eine Regel komplett matched.
   * Teilregeln wie (variable operator dataType) matchen erst dann, wenn Variable, Operator
   * und dataType matchen. Failt eine Regel, alles was in der Klammer steht ignoriert und zur
   * nächsten Regel gesprungen. Aus diesem Grund wird bei fehlerhafter Eingabe erst nach dem Prüfen
