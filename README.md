@@ -1,6 +1,14 @@
 # README Medcodelogic Editor
 
 ## Brief description
+This is the parser for medcodelogic.
+
+In the file medcodelogic.pegjs you can find the current medcodelogic grammar rules.
+
+Based on this rules the parser will be generated using the following commands (make sure peggy is installed globally):
+
+create the parser.js from your grammar: -peggy medcodelogic.pegjs <br>
+
 
 ## Libraries
 - Peggy for parser (use typescript) https://github.com/peggyjs/peggy.
