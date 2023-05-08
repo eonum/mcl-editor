@@ -2,58 +2,214 @@ require(['vs/editor/editor.main'], function() {
   // Define the language
   monaco.languages.register({ id: 'mylang' });
 
-  // This method is used to load the data, however there are some problems as in this
-  // way the loading is asynchron and the code below is run before the data is properly loaded.
-  // TODO find a better way to load the data
-  // NOTE there are some redunancies as the backend has developed a similar method, need to check with them which one to use / to uniform the methods
-  function loadData(filePath) {
+  /**
+   * Mock method, will be replaced by eonum
+   * @param {*} filePath file path to the JSON file
+   * @returns a Promise with the data and a status of the asyncronous function
+   * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise
+   */
+  async function loadTablesFromJSON(filePath){
     return fetch(filePath)
-      .then(response => response.json())
-      .then(data => {
-        return data;
+      .then(response => response.json())  // Turn the JSON into a JS object.
+      .then(tabData => {
+        // mylangTables = tabData;
+        mylangTables = Object.entries(tabData); // Transforms everything into an Object.
+        mylangTables = mylangTables.map((tables) => tables[1]); // Cuts off the name.
+        mylangTables = [].concat(...mylangTables);  // Concatenate all the tables into one array.
+
+        console.log("Original Tables before transformation")
+        console.log(mylangTables)
+
+        // Transforms the mylangTables into a Monaco Element
+        mylangTables = mylangTables.map(t => {
+          return {
+            label: t.label,
+            kind: monaco.languages.CompletionItemKind.Field,
+            insertText: t.label,
+            detail: t.value + ""
+          };
+        })
       })
       .catch(error => console.error(error));
   }
 
-  const varFilePath = 'variable_and_tables_info/variables.json';
+  /**
+   * Mock method, will be replaced by eonum
+   * @param {*} filePath file path to the JSON file
+   * @returns a Promise with the data and a status of the asyncronous function
+   * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise
+   */
+  async function loadVariablesFromJSON(filePath){
+    return fetch(filePath)
+      .then(response => response.json())  // Turn the JSON into a JS object.
+      .then(varData => {
+        // mylangVariables = varData;
+        mylangVariables = Object.entries(varData);  // Transforms everything into an Object.
+        mylangVariables = mylangVariables.map(variables => variables[1]);  // Cuts off the name.
+
+        console.log("Original Variables before transformation")
+        console.log(mylangVariables)
+
+        // Transforms the mylangVariables into a Monaco Element
+        mylangVariables = mylangVariables.map(v => {
+          // Set the correct documentation
+          let options = ""
+          if(!v.is_enum){
+            options = "\nAlles vom Typ " + v.variable_type
+          }
+          else{
+            //options = v.values
+            let count = 1;
+            for(opt of v.values_de){
+              options += "\n" + count + ") " + opt;
+              count += 1;
+            }
+          }
+
+          return {
+            label: v.field_name,
+            kind: monaco.languages.CompletionItemKind.Variable,
+            insertText: v.field_name,
+            detail: v.name_de,
+            documentation: "Mögliche Werte : " + options
+          };
+        })
+      })
+      .catch(error => console.error(error));
+  }
+
+  /**
+   * A getter for all the lists
+   * @returns an Array with all the Lists concatenated
+   */
+  function getAllLists(){
+    return mylangKeywords
+    .concat(mylangFunctions)
+    .concat(mylangVariables)
+    .concat(mylangTables);
+  }
+
+  // Links to the JSON files
+  const varFilePath = '../../variables.json';
+  const tabFilePath = '../../tables.json';
+
   let mylangVariables;
-  
-  const tabFilePath = 'variable_and_tables_info/tables.json';
   let mylangTables;
-  
-  //TODO find out how to better handle the loading than with these promises
-  const varPromise = loadData(varFilePath);
-  const tabPromise = loadData(tabFilePath);
 
-  // load variables data
-  varPromise.then((variablesData) => {
-    // save variables to global variable for later use
-    window.variablesData = variablesData;
-    mylangVariables = variablesData;
-    mylangVariables = Object.entries(mylangVariables);
-    mylangVariables = mylangVariables.map((variables) => variables[1])
-  });
-
-  // load tables data
-  tabPromise.then((tablesData) => {
-    // save tables to global variable for later use
-    window.tablesData = tablesData;
-    mylangTables = tablesData;
-    mylangTables = Object.entries(mylangTables);
-    mylangTables = mylangTables.map((tables) => tables[1])
-    mylangTables = [].concat(...mylangTables)
-  });
-
+  /** @todo There is a bug where after entering a keyword the editor doesn't work properly */
+  /** @todo Are these really necessary / needed in medcoedelogic? */
   // Define the list of keywords
   const mylangKeywords = [
-    'continue', 'for', 'and', 'or',
-    'if', 'break', 'else', 'return',
-    'const', 'while', 'true', 'false',
+    {
+      label: 'continue',
+      kind: monaco.languages.CompletionItemKind.Keyword,
+      insertText: 'continue'
+    },
+    {
+      label: 'for',
+      kind: monaco.languages.CompletionItemKind.Keyword,
+      insertText: 'for',
+    },
+    {
+      label: 'and',
+      kind: monaco.languages.CompletionItemKind.Keyword,
+      insertText: 'and',
+    },
+    {
+      label: 'or',
+      kind: monaco.languages.CompletionItemKind.Keyword,
+      insertText: 'or',
+    },
+    {
+      label: 'if',
+      kind: monaco.languages.CompletionItemKind.Keyword,
+      insertText: 'if',
+    },
+    {
+      label: 'break',
+      kind: monaco.languages.CompletionItemKind.Keyword,
+      insertText: 'break',
+    },
+    {
+      label: 'else',
+      kind: monaco.languages.CompletionItemKind.Keyword,
+      insertText: 'else',
+    },
+    {
+      label: 'return',
+      kind: monaco.languages.CompletionItemKind.Keyword,
+      insertText: 'return',
+    },
+    {
+      label: 'const',
+      kind: monaco.languages.CompletionItemKind.Keyword,
+      insertText: 'const',
+    },
+    {
+      label: 'while',
+      kind: monaco.languages.CompletionItemKind.Keyword,
+      insertText: 'while',
+    },
+    {
+      label: 'true',
+      kind: monaco.languages.CompletionItemKind.Keyword,
+      insertText: 'true',
+    },
+    {
+      label: 'false',
+      kind: monaco.languages.CompletionItemKind.Keyword,
+      insertText: 'false',
+    },
   ];
 
+  /** @todo Are these really necessary / needed in medcoedelogic? */
   // Define the list of type keywords
   const mylangTypeKeywords = [
-    'boolean', 'double', 'byte', 'int', 'short', 'char', 'void', 'long', 'float'
+    {
+      label: "boolean",
+      kind: monaco.languages.CompletionItemKind.TypeParameter,
+      insertText: "boolean"
+    },
+    {
+      label: "double",
+      kind: monaco.languages.CompletionItemKind.TypeParameter,
+      insertText: "double"
+    },
+    {
+      label: "byte",
+      kind: monaco.languages.CompletionItemKind.TypeParameter,
+      insertText: "byte"
+    },
+    {
+      label: "int",
+      kind: monaco.languages.CompletionItemKind.TypeParameter,
+      insertText: "int"
+    },
+    {
+      label: "short",
+      kind: monaco.languages.CompletionItemKind.TypeParameter,
+      insertText: "short"
+    },
+    {
+      label: "char",
+      kind: monaco.languages.CompletionItemKind.TypeParameter,
+      insertText: "char"
+    },
+    {
+      label: "void",
+      kind: monaco.languages.CompletionItemKind.TypeParameter,
+      insertText: "void"
+    },
+    {
+      label: "long",
+      kind: monaco.languages.CompletionItemKind.TypeParameter,
+      insertText: "long"
+    },
+    {
+      label: "float",
+      kind: monaco.languages.CompletionItemKind.TypeParameter,
+      insertText: "float"
+    },
   ];
 
   // Define the list of functions
@@ -224,23 +380,24 @@ require(['vs/editor/editor.main'], function() {
     },
   ];
   
-  Promise.all([varPromise, tabPromise]).then(() => {
-    console.log(mylangVariables);
+  /**
+   * Everything that relies on the completion of the loadingprocess for the myLangVariables and myLangTables is put in here
+   * This ensures that the loading process is completed before continuing.
+   */
+  Promise.all([loadTablesFromJSON(tabFilePath), loadVariablesFromJSON(varFilePath)]).then(() => {
+    console.log("Tables & Variables after loading")
     console.log(mylangTables);
-
-    //Add methods to call here:
+    console.log(mylangVariables);
   
     // Register a tokens provider for the language
     monaco.languages.setMonarchTokensProvider('mylang', {
   
-      keywords: mylangKeywords,
+      keywords: mylangKeywords.map(kw => kw.label),
       
-      typeKeywords: mylangTypeKeywords,
+      typeKeywords: mylangTypeKeywords.map(tkw => tkw.label),
 
-      //TODO properly map the variables
-      variables: mylangVariables.map(variable => variable.field_name),
+      variables: mylangVariables.map(variable => variable.label),
 
-      //TODO properly map the tables
       tables: mylangTables.map(table => table.label),
       
       operators: [
@@ -326,6 +483,9 @@ require(['vs/editor/editor.main'], function() {
     // Responsible for the autocompletion
     monaco.languages.registerCompletionItemProvider('mylang', {
       provideCompletionItems: function(model, position) {
+        // The maximum options being suggested.
+        const maxOptions = 10
+        
         // Get the current word and its range
         var word = model.getWordUntilPosition(position);
         var range = {
@@ -334,74 +494,17 @@ require(['vs/editor/editor.main'], function() {
           startColumn: word.startColumn,
           endColumn: word.endColumn
         };
-    
-        const suggestions = mylangKeywords.map(label => {
-          return {
-            label,
-            kind: monaco.languages.CompletionItemKind.Keyword,
-            insertText: label + ' '
-          };
-        }).concat(mylangFunctions.map(func => {
-          return {
-            label: func.label,
-            kind: func.kind,
-            insertText: func.insertText,
-            detail: func.documentation
-          };
-        })).concat(mylangVariables.map(v => {
-          return {
-            label: v.field_name,
-            kind: monaco.languages.CompletionItemKind.Variable,
-            insertText: v.field_name,
-            /*
-              detail is used to provide a short, one-line description of the completion item. 
-              It is typically used to display information such as the return type of a function, 
-              the type of a variable, or a summary of what the completion item represents.
-            */
-            detail: "",
-            /*
-              documentation, on the other hand, is used to provide more detailed information about the completion item. 
-              It can be a longer text that describes what the completion item does, how to use it, or any other relevant information.
-            */
-            documentation: 
-              "DE: " + v.name_de + "\n" + 
-              "FR: " + v.name_fr + "\n" +
-              "IT: " + v.name_it + "\n" +
-              "\n" +
-              "Operator options: " + v.operators_option_list + "\n" +
-              "Variable type: " + v.variable_type
-          };
-        })).concat(mylangTables.map(t => {
-          return {
-            label: t.label,
-            //TODO find out what the differences are of the CompletionItemKind
-            kind: monaco.languages.CompletionItemKind.Constant,
-            insertText: t.label,
-            detail: t.value + ""
-          };
-        }));
 
         // Filter the suggestions based on the current word
-        let filteredSuggestions = suggestions.filter(suggestion => {
-          //used for debugging
-          //let test = suggestion.label.startsWith(word.word);
-          //if(test){
-          //  console.log(suggestion)
-          //}
-          //
+        let filteredSuggestions = getAllLists().filter(suggestion => {
           return suggestion.label.startsWith(word.word);
         });
-        //log all possible options
-        //console.log(filteredSuggestions)
 
-        //the maximum options being suggested
-        let maxOptions = 10
         // Cuts of if there are too many options
+        /** @todo Check if there is a better way to handle this. The problem is if there are too many options, just one is shown at the moment */
         if(filteredSuggestions.length > maxOptions){
           filteredSuggestions = filteredSuggestions.slice(0,maxOptions);
         }
-        //console.log(filteredSuggestions)
-
 
         // Create a CompletionList from the suggestions and return it
         return {
@@ -417,57 +520,28 @@ require(['vs/editor/editor.main'], function() {
       provideHover: function(model, position) {
         // Get the current word and its range
         var word = model.getWordAtPosition(position);
-        console.log(word.word)
-
-        //if there is no word return
-        if (!word) {
-            return null;
-        }
-
         var range = {
             startLineNumber: position.lineNumber,
             endLineNumber: position.lineNumber,
             startColumn: word.startColumn,
             endColumn: word.endColumn
         };
+
+        // Filter the suggestions based on the current word
+        let filteredToolTip = getAllLists().filter(suggestion => {
+          return suggestion.label.includes(word.word);
+        });
+
+        /** @todo What should happen if multiple things match the possibility? */
+        if(!filteredToolTip){
+          return null;
+        }
         
-        // Check for matching keywords
-        if (mylangKeywords.includes(word.word)) {
-          return {
-              range: range,
-              contents: [{ value: word.word, }]
-          };
+        return {
+          range: range,
+          contents: [{value: filteredToolTip[0].documentation}] // Get the first of the options and show documentation as tooltip
         }
 
-        // Check for matching functions
-        const matchingMyLangFunction = mylangFunctions.find(f => (f.insertText === word.word || f.label === word.word));
-        if (matchingMyLangFunction) {
-          return {
-              range: range,
-              contents: [{ value: matchingMyLangFunction.documentation }]
-          };
-        }
-
-        // Check for matching variables
-        const matchingMyLangVariable = mylangVariables.find(v => v.field_name === word.word);
-        if(matchingMyLangVariable){
-          return {
-            range: range,
-            contents: [{ value: matchingMyLangVariable.name_de }]
-          };
-        }
-
-        // Check for matching tables
-        const matchingMyLangTable = mylangTables.find(t => t.label === word.word)
-        if(matchingMyLangTable){
-          console.log(matchingMyLangTable)
-          return {
-            range: range,
-            contents: [{ value: matchingMyLangTable.value + "" }]
-          }
-        };
-        
-        return null;
       }
     });
 
