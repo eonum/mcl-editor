@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Medcodelogic Parser</title>
+</head>
+<body>
+
+	<form>
+    <!--label is only a text-->
+		<label for="userInput">Enter something to parse:</label>
+
+    <!--input takes users input via textfield-->
+		<input type="text" id="userInput" name="userInput" oninput="parseInput()">
+	</form>
+
+  <!--div is a textare, where we want to display the output-->
+	<div id="output"></div>
+
+    <!--import our parser-->
+  <script src = "medcodelogic.js"></script>
+	<script>
+
+		function parseInput() {
+			// Get user input from textfield
+			var userInput = document.getElementById("userInput").value;
+
+			// Call function from our parser (peg$parse) with the user input as a parameter
+			try {
+				var result = peg$parse(userInput);
+				document.getElementById("output").innerHTML = result;
+			} catch (e) {
+				document.getElementById("output").innerHTML = "Error: " + e.message;
+			}
+		}
+	</script>
+</body>
+</html>
