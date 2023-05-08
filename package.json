@@ -29,7 +29,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "babel src -d js/medcodelogic.js",
     "test": "jest --runInBand",
     "startHeadlessOnTestPort": "BROWSER=none PORT=$npm_package_config_testPort yarn start",
     "eject": "react-scripts eject"
