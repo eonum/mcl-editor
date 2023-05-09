@@ -121,18 +121,23 @@
   <div id="container" style="height: 50px; box-sizing: border-box;"></div> 
 </div>
 
-	<script>
-    function parseInput(valueMonaco) {	
-      // Call function from our parser (peg$parse) with the user input as a parameter
-			try {
-				var result = Parser.parse(valueMonaco); // Send content to the Parser
-        return  // If no error then return null
-			} 
-      catch (e) {
-        return e  // Return the error
-			}
-		}
-	</script>
+<script>   
+  /**
+   * This function takes in the input value from the Monaco editor and uses the Parser to parse it.
+   * If the input is valid, it returns null. Otherwise, it returns the error object.
+   * @param {string} valueMonaco - The input value from the Monaco editor.
+   * @returns {Object} If input is valid, returns null. Otherwise, returns an error object.
+   */
+  function parseInput(valueMonaco) {
+    try {
+      var result = Parser.parse(valueMonaco); // Send content to the Parser
+      return null; // If no error then return null
+    }
+    catch (e) {
+      return e; // Return the error
+    }
+  }
+</script>
 
 <br><br><br><br><br><br><br><br><br><br><br><br>
 <div id="output"></div>
