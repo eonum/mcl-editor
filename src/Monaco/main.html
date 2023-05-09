@@ -17,6 +17,7 @@
     // Timer used for delay in output
     let timerId;
     let lastValue = "";
+    let result;
 
     /**
      * Throttle and debounce function for better performance
@@ -119,10 +120,12 @@
       const content = editor.getValue();
       sendContent(content);
     });
+  
     // This is a mock, here the content gets sent to the server (Will be changed by enoum)
     function sendContent(content) {
       console.log(content);
     }
+
   });
 </script>
 
