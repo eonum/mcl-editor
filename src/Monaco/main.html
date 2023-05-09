@@ -25,7 +25,7 @@
      * @param delay (number): The amount of time before the editor's content is output. Default is 1 second delay.
      * @param throttleDelay (number): The amount of time before the editor's content is output when typing slowly. Default is 300 milliseconds.
      */
-    function throttleAndDebounceLogEditorValue(value, delay = 1000, throttleDelay = 300) {
+    function throttleAndDebounceLogEditorValue(value, delay = 400, throttleDelay = 300) {
       // Throttle
       /**
        * This statement checks whether timerId is currently null or not. 
@@ -56,19 +56,37 @@
     }
 
     function checkContent(){
+      if (!value.trim()) {
+        monaco.editor.setModelMarkers(editor.getModel(), "myMarkerId", []); // Clear Errors
+        submitButton.disabled = true; // Disable the submit button
+        return;
+      }
+
       error = parseInput(editor.getValue());
       // If there is an error mark it
       if(error){
         var model = monaco.editor.getModels()[0]; // Get the first model of the editor
-        var lineNumber = error.location.start.line - 1; // Convert 1-based to 0-based line number
-        var range = new monaco.Range(lineNumber, error.location.start.column - 1, lineNumber, error.location.end.column - 1); // Create range object for the error
+        var lineNumber = error.location.start.line;
+        let columnNumber = error.location.start.column - 1;
+        let wordLength = error.location.end.column - error.location.start.column;
+        let range = new monaco.Range(lineNumber, columnNumber, lineNumber, columnNumber + wordLength); // Create range object for the error
         var severity = monaco.MarkerSeverity.Error; // Set severity to Error
         var message = error.message; // Use error message as the marker message
-        monaco.editor.setModelMarkers(model, "myMarkerId", [{ severity: severity, message: message, startLineNumber: range.startLineNumber, startColumn: range.startColumn, endLineNumber: range.endLineNumber, endColumn: range.endColumn }]); // Set marker on the model
+
+        monaco.editor.setModelMarkers(model, "myMarkerId", [{
+          severity: severity, 
+          message: message, 
+          startLineNumber: range.startLineNumber, 
+          startColumn: range.startColumn, 
+          endLineNumber: range.endLineNumber, 
+          endColumn: range.endColumn 
+        }]); // Set marker on the model
+
+        submitButton.disabled = true; // Disable the submit button
       }
       else{
-        // Clear Errors
-        monaco.editor.setModelMarkers(editor.getModel(), "myMarkerId", []);
+        monaco.editor.setModelMarkers(editor.getModel(), "myMarkerId", []); // Clear Errors
+        submitButton.disabled = false;  // Enable the submit button
         //TODO: show if correct
       }
     }
@@ -77,8 +95,23 @@
     editor.onDidChangeModelContent(() => {
       throttleAndDebounceLogEditorValue(editor.getValue());
     });
+
+
+    const submitBtn = document.getElementById("submitButton");
+
+    submitBtn.addEventListener("click", () => {
+      const content = editor.getValue();
+      sendContent(content);
+    });
+
+    // This is a mock, here the content gets sent to the server
+    function sendContent(content) {
+      console.log(content);
+    }
   });
 </script>
+
+<button id = "submitButton" disabled>Submit</button>
 
 <!-- load language -->
 <script src="./mylang.js"></script>
@@ -90,20 +123,13 @@
 
 	<script>
     function parseInput(valueMonaco) {	
-      if (!valueMonaco.trim()) {
-        // Ignore parsing when the editor's content is empty
-        document.getElementById("output").innerHTML = "";
-        return;
-      }
-      
-			// Call function from our parser (peg$parse) with the user input as a parameter
+      // Call function from our parser (peg$parse) with the user input as a parameter
 			try {
-				var result = Parser.parse(valueMonaco);
-				document.getElementById("output").innerHTML = result;
-        return
-			} catch (e) {
-				document.getElementById("output").innerHTML = "Error at location: " + e.location.end.offset;
-        return e
+				var result = Parser.parse(valueMonaco); // Send content to the Parser
+        return  // If no error then return null
+			} 
+      catch (e) {
+        return e  // Return the error
 			}
 		}
 	</script>
