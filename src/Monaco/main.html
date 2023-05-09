@@ -14,6 +14,7 @@
     // Timer used for delay in output
     let timerId;
     let lastValue = "";
+    let result;
 
     /**
      * Throttle and debounce function for better performance
@@ -30,7 +31,9 @@
        * If timerId is not null, it means that a timer has already been set, and we don't want to log the editor value again until the timer has completed.
        */
       if (!timerId) {
-        console.log(editor.getValue());
+        result = editor.getValue();
+        parseInput(result);
+        console.log(result);
         timerId = setTimeout(() => {
           timerId = null;
         }, throttleDelay);
@@ -45,7 +48,9 @@
       if (value != lastValue) {
         clearTimeout(timerId);
         timerId = setTimeout(() => {
-          console.log(editor.getValue());
+          result = editor.getValue();
+          parseInput(result);
+          console.log(result);
           timerId = null;
         }, delay);
         lastValue = value;
@@ -61,6 +66,7 @@
     editor.onDidChangeModelContent(() => {
       parseInput(editor.getValue());
     });
+
   });
 </script>
 
@@ -76,15 +82,17 @@
 	<script>
 
 		function parseInput(valueMonaco) {
-		
 			// Call function from our parser (peg$parse) with the user input as a parameter
 			try {
 				var result = peg$parse(valueMonaco);
 				document.getElementById("output").innerHTML = result;
+        return result
 			} catch (e) {
 				document.getElementById("output").innerHTML = "Error: " + e.message;
+        return e
 			}
 		}
+
 	</script>
 <br><br><br><br><br><br><br><br><br><br><br><br>
 <div id="output"></div>
