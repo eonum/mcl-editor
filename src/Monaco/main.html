@@ -83,7 +83,7 @@
 				var result = Parser.parse(valueMonaco);
 				document.getElementById("output").innerHTML = result;
 			} catch (e) {
-				document.getElementById("output").innerHTML = "Error: " + e.message;
+				document.getElementById("output").innerHTML = "Error at location: " + e.location.end.offset;
 			}
 		}
 	</script>

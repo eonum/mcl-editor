@@ -91,8 +91,10 @@
   },
   "devDependencies": {},
   "scripts": {
-    "build":"webpack"
-  },
+    "build":"webpack",
+    "test": "jest"
+
+    },
   "keywords": [],
   "author": "",
   "license": "ISC"
