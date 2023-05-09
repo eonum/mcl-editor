@@ -545,6 +545,32 @@ require(['vs/editor/editor.main'], function() {
       }
     });
 
+    function markError(error) {
+      // Extract line number and column number from error message
+      const match = error.message.match(/at .*:(\d+):(\d+)/);
+      if (!match) {
+        console.error('Failed to extract line and column number from error message:', error.message);
+        return;
+      }
+      const lineNumber = parseInt(match[1]);
+      const column = parseInt(match[2]);
+    
+      // Create error marker
+      const model = editor.getModel();
+      const marker = {
+        startLineNumber: lineNumber,
+        endLineNumber: lineNumber,
+        startColumn: column,
+        endColumn: model.getLineMaxColumn(lineNumber),
+        message: error.message,
+        severity: monaco.MarkerSeverity.Error
+      };
+    
+      // Add error marker to model
+      monaco.editor.setModelMarkers(model, 'myMarker', [marker]);
+    }
+    
+
   })
   
 });

@@ -1,5 +1,8 @@
+<script type="text/JavaScript" src = "./bundle.js"></script>
 <!-- Load the Monaco editor -->
 <script src="https://unpkg.com/monaco-editor@0.25.2/min/vs/loader.js"></script>
+
+
 
 <!-- Initialize the Monaco editor -->
 <script>
@@ -23,7 +26,7 @@
      * @param delay (number): The amount of time before the editor's content is output. Default is 1 second delay.
      * @param throttleDelay (number): The amount of time before the editor's content is output when typing slowly. Default is 300 milliseconds.
      */
-    function throttleAndDebounceLogEditorValue(value, delay = 1000, throttleDelay = 300) {
+    function throttleAndDebounceLogEditorValue(value, delay = 400, throttleDelay = 300) {
       // Throttle
       /**
        * This statement checks whether timerId is currently null or not. 
@@ -31,9 +34,7 @@
        * If timerId is not null, it means that a timer has already been set, and we don't want to log the editor value again until the timer has completed.
        */
       if (!timerId) {
-        result = editor.getValue();
-        parseInput(result);
-        console.log(result);
+        checkContent(); // Send the content to the parser
         timerId = setTimeout(() => {
           timerId = null;
         }, throttleDelay);
@@ -48,12 +49,62 @@
       if (value != lastValue) {
         clearTimeout(timerId);
         timerId = setTimeout(() => {
-          result = editor.getValue();
-          parseInput(result);
-          console.log(result);
+          checkContent(); // Send the content to the parser
           timerId = null;
         }, delay);
         lastValue = value;
+      }
+    }
+
+    /** 
+     * Checks the content of the editor and marks any errors in the editor with a red underline
+     * Disables the submit button if there is an error in the content, otherwise enables it
+     */
+    function checkContent(){
+      // If the editor is empty remove all errors and disable the submit button
+      if (!editor.getValue().trim()) {
+        monaco.editor.setModelMarkers(editor.getModel(), "myMarkerId", []); // Clear Errors
+        submitButton.disabled = true; // Disable the submit button
+        return;
+      }
+
+      // Get the error, undefined if no error thrown
+      error = parseInput(editor.getValue());
+
+      // If there is an error mark it
+      if(error){
+        // Get the first model of the editor
+        var model = monaco.editor.getModels()[0]; 
+
+        // Set severity to Error
+        var severity = monaco.MarkerSeverity.Error; 
+        // Use error message as the marker message
+        var message = error.message; 
+
+        // Get the range of the falsy word
+        var lineNumber = error.location.start.line;
+        let columnNumber = error.location.start.column;
+        let wordLength = error.location.end.column - error.location.start.column;
+        let range = new monaco.Range(lineNumber, columnNumber, lineNumber, columnNumber + wordLength); // Create range object for the error
+
+        // Set marker on the model
+        monaco.editor.setModelMarkers(model, "myMarkerId", [{
+          severity: severity, 
+          message: message, 
+          startLineNumber: range.startLineNumber, 
+          startColumn: range.startColumn, 
+          endLineNumber: range.endLineNumber, 
+          endColumn: range.endColumn 
+        }]); 
+
+        // Disable the submit button
+        submitButton.disabled = true; 
+      }
+      else{
+        // Clear Errors
+        monaco.editor.setModelMarkers(editor.getModel(), "myMarkerId", []); 
+        // Enable the submit button
+        submitButton.disabled = false;  
       }
     }
 
@@ -62,13 +113,23 @@
       throttleAndDebounceLogEditorValue(editor.getValue());
     });
 
-    // Get the current value of the editor
-    editor.onDidChangeModelContent(() => {
-      parseInput(editor.getValue());
+    // Get the submit button
+    const submitBtn = document.getElementById("submitButton");  
+    // Add an Eventlistener to the button
+    submitBtn.addEventListener("click", () => {
+      const content = editor.getValue();
+      sendContent(content);
     });
+  
+    // This is a mock, here the content gets sent to the server (Will be changed by enoum)
+    function sendContent(content) {
+      console.log(content);
+    }
 
   });
 </script>
+
+
 
 <!-- load language -->
 <script src="./mylang.js"></script>
@@ -76,25 +137,27 @@
 <!-- This is the visual code editor box -->
 <div style="border: 3px solid #ccc; padding: 5px; max-width: 600px;">
   <div id="container" style="height: 50px; box-sizing: border-box;"></div> 
+  <!-- Submit Button -->
+  <button id = "submitButton" disabled>Submit</button>
 </div>
 
-<script src = "../Parser/medcodelogic3.js"></script>
-	<script>
+<script>
+  /**
+   * This function takes in the input value from the Monaco editor and uses the Parser to parse it.
+   * If the input is valid, it returns null. Otherwise, it returns the error object.
+   * @param {string} valueMonaco - The input value from the Monaco editor.
+   * @returns {Object} If input is valid, returns null. Otherwise, returns an error object.
+   */
+  function parseInput(valueMonaco) {
+    try {
+      var result = Parser.parse(valueMonaco); // Send content to the Parser
+      return null; // If no error then return null
+    }
+    catch (e) {
+      return e; // Return the error
+    }
+  }
+</script>
 
-		function parseInput(valueMonaco) {
-			// Call function from our parser (peg$parse) with the user input as a parameter
-			try {
-				var result = peg$parse(valueMonaco);
-				document.getElementById("output").innerHTML = result;
-        return result
-			} catch (e) {
-				document.getElementById("output").innerHTML = "Error: " + e.message;
-        return e
-			}
-		}
-
-	</script>
 <br><br><br><br><br><br><br><br><br><br><br><br>
 <div id="output"></div>
-
-

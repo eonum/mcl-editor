@@ -1,6 +1,14 @@
 # README Medcodelogic Editor
 
 ## Brief description
+This is the parser for medcodelogic.
+
+In the file medcodelogic.pegjs you can find the current medcodelogic grammar rules.
+
+Based on this rules the parser will be generated using the following commands (make sure peggy is installed globally):
+
+create the parser.js from your grammar: -peggy medcodelogic.pegjs <br>
+
 
 ## Libraries
 - Peggy for parser (use typescript) https://github.com/peggyjs/peggy.
@@ -65,3 +73,12 @@ create the parser.js from your grammar: -peggy medcodelogic.pegjs <br>
 
 The current HTML file does support the parser input and output. The output is either a string (when parsed successfully)<br>
 or an exception with the error warning.
+
+webpack.config.js does export the bundle files function via the command Parse.yourFunction(). We only use the .prase() function
+In the HTML the script for the bundle (actual Parser) needs to be initialized BEFORE the loader of the Monaco Code Editor.
+
+If you change something from the grammar (medcodelogic.pegjs) first run peggy src/Peggy/medcodelogic.pegjs
+This will generate a new parser (medcodelogic.js). Then use npm run build to bundle the parser. Make sure to delet the old bundle.js file in the Monaco directory and replace the newly generated bundle.js file in the Monaco folder.
+
+## Running
+The submit button is disabled as long as there is no content or an error. Pressing the submit button will log the valid content into the console.
