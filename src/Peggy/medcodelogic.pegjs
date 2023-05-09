@@ -19,13 +19,16 @@ var currentGlobalVariableName;
 var currentGlobalData;
 
 function isInTable(input){
-    var modifiedInput = arrayToString(input)
+  var modifiedInput = arrayToString(input)
 
-       for (const key in tablesJson) {
-        // Compare key with input
-        if (key == modifiedInput){return true}
-    }
-        {return false}
+     for(const key in tablesJson){
+      for(let i = 0; i< tablesJson[key].length; i++){
+        if(tablesJson[key][i] != undefined){
+          if (tablesJson[key][i].label == modifiedInput){return true}
+      }
+  }  
+} 
+{return false}
 }
 
 // this function is not done yet
@@ -135,8 +138,9 @@ dateCompare
 codeCompare
 = (codeOrVariableCode _ operator _ codeOrVariableCode)
 
+//old version: inList = variable _ ('not' / "") _ 'in list' _ codeList
 inList
-= variable _ ('not' / "") _ 'in list' _ codeList
+= variableCode _ ('not' / "") _ 'in list' _ codeList
 
 inTable
 = variable _ ('not' / "") _ 'in table' _ tableList _
@@ -169,8 +173,9 @@ dates
 lookup 
 = 'lookup' _ lparen (alwaysMatch _ )* rparen
 
+//old version: codeList = = lparen _ (number / string / code) (_ ',' _ number / string / code)* _ rparen
 codeList
-= lparen _ (number / string / code) (_ ',' _ number / string / code)* _ rparen
+= lparen _ code (_ ',' _ code)* _ rparen
 
 tableList
 = lparen _ table  (_ ',' _ table _ )* _ rparen

@@ -62,10 +62,20 @@ For further question:
 - See [this](https://microsoft.github.io/monaco-editor/typedoc/enums/languages.CompletionItemKind.html) for additional information about the CompletionItemKind
 - See [this](https://microsoft.github.io/monaco-editor/typedoc/interfaces/languages.CompletionItem.html#documentation) for additional information about CompletionItems
 
+<h1>Peggy Parser</h1>
 
-webpack.config.js does export the bundle files function via the command Parse.yourFunction(). We only use the .prase() function
+This is the parser for medcodelogic.<br>
+In the file medcodelogic.pegjs you can find the current medcodelogic grammar rules.
+Based on this rules the parser will be generated using the following commands (make sure peggy is installed globally):
+create the parser.js from your grammar use the command peggy medcodelogic.pegjs (note here its peggy src/Peggy/medcodelogic.pegjs)
+
+The generated parser can be used as an object in JS. But for use in the browser we had to bundle it. 
+Therefore we used Webpack. All the necessary configurations are in the webpack.config.js
+
+webpack.config.js if you want to use the function .parse from the bundled file (bundle.js) use Parser.parse(). We only use the .prase() function.
+This function is exported (see webpack.config.js).
 In the HTML the script for the bundle (actual Parser) needs to be initialized BEFORE the loader of the Monaco Code Editor.
 
-If you change something from the grammar (medcodelogic.pegjs) first run peggy src/Peggy/medcodelogic.pegjs
+If you change something in the grammar (medcodelogic.pegjs)  run peggy src/Peggy/medcodelogic.pegjs after your changes.
 This will generate a new parser (medcodelogic.js). Then use npm run build to bundle the parser. Make sure to delet the old bundle.js file in the Monaco directory and replace the newly generated bundle.js file in the Monaco folder.
 
