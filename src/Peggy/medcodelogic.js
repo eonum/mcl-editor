@@ -24,6 +24,12 @@ function isInTable(input){
         {return false}
 }
 
+// this function is not done yet
+function isInList(input){
+    var modifiedInput = arrayToString(input)
+    return true;
+}
+
 
 /**
  * Returns true if the input is a validvariable name AND safes itsvariable name
@@ -648,6 +654,9 @@ function peg$parse(input, options) {
             s1 = peg$parsefunction();
             if (s1 === peg$FAILED) {
               s1 = peg$parsevariable();
+              if (s1 === peg$FAILED) {
+                s1 = peg$parsenumber();
+              }
             }
           }
         }
@@ -892,18 +901,19 @@ function peg$parse(input, options) {
     var s0, s1, s2, s3, s4, s5;
 
     s0 = peg$currPos;
-    s1 = peg$parsenumberOrVariableNumber();
+    s1 = peg$parsecalculation();
     if (s1 === peg$FAILED) {
-      s1 = peg$parsecalculation();
-    }
+      s1 = peg$parsenumberOrVariableNumber();
+
     if (s1 !== peg$FAILED) {
       s2 = peg$parse_();
       s3 = peg$parseoperator();
       if (s3 !== peg$FAILED) {
         s4 = peg$parse_();
-        s5 = peg$parsenumberOrVariableNumber();
+        s5 = peg$parsecalculation();
         if (s5 === peg$FAILED) {
-          s5 = peg$parsecalculation();
+          s5 = peg$parsenumberOrVariableNumber();
+
         }
         if (s5 !== peg$FAILED) {
           s1 = [s1, s2, s3, s4, s5];
@@ -2672,6 +2682,5 @@ function peg$parse(input, options) {
 
 module.exports = {
   SyntaxError: peg$SyntaxError,
-  parse: peg$parse,
-  arrayToString
+  parse: peg$parse
 };

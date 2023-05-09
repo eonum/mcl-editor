@@ -28,6 +28,12 @@ function isInTable(input){
         {return false}
 }
 
+// this function is not done yet
+function isInList(input){
+    var modifiedInput = arrayToString(input)
+    return true;
+}
+
 
 /**
  * Returns true if the input is a validvariable name AND safes itsvariable name
