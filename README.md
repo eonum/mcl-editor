@@ -69,3 +69,5 @@ In the HTML the script for the bundle (actual Parser) needs to be initialized BE
 If you change something from the grammar (medcodelogic.pegjs) first run peggy src/Peggy/medcodelogic.pegjs
 This will generate a new parser (medcodelogic.js). Then use npm run build to bundle the parser. Make sure to delet the old bundle.js file in the Monaco directory and replace the newly generated bundle.js file in the Monaco folder.
 
+## Running
+The submit button is disabled as long as there is no content or an error. Pressing the submit button will log the valid content into the console.
