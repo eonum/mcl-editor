@@ -904,7 +904,7 @@ function peg$parse(input, options) {
     s1 = peg$parsecalculation();
     if (s1 === peg$FAILED) {
       s1 = peg$parsenumberOrVariableNumber();
-    }
+
     if (s1 !== peg$FAILED) {
       s2 = peg$parse_();
       s3 = peg$parseoperator();
@@ -913,6 +913,7 @@ function peg$parse(input, options) {
         s5 = peg$parsecalculation();
         if (s5 === peg$FAILED) {
           s5 = peg$parsenumberOrVariableNumber();
+
         }
         if (s5 !== peg$FAILED) {
           s1 = [s1, s2, s3, s4, s5];
