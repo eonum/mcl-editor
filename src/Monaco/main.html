@@ -56,23 +56,33 @@
     }
 
     function checkContent(){
+      // If the editor is empty remove all errors and disable the submit button
       if (!editor.getValue().trim()) {
         monaco.editor.setModelMarkers(editor.getModel(), "myMarkerId", []); // Clear Errors
         submitButton.disabled = true; // Disable the submit button
         return;
       }
 
+      // Get the error, undefined if no error thrown
       error = parseInput(editor.getValue());
+
       // If there is an error mark it
       if(error){
-        var model = monaco.editor.getModels()[0]; // Get the first model of the editor
+        // Get the first model of the editor
+        var model = monaco.editor.getModels()[0]; 
+
+        // Set severity to Error
+        var severity = monaco.MarkerSeverity.Error; 
+        // Use error message as the marker message
+        var message = error.message; 
+
+        // Get the range of the falsy word
         var lineNumber = error.location.start.line;
-        let columnNumber = error.location.start.column - 1;
+        let columnNumber = error.location.start.column;
         let wordLength = error.location.end.column - error.location.start.column;
         let range = new monaco.Range(lineNumber, columnNumber, lineNumber, columnNumber + wordLength); // Create range object for the error
-        var severity = monaco.MarkerSeverity.Error; // Set severity to Error
-        var message = error.message; // Use error message as the marker message
 
+        // Set marker on the model
         monaco.editor.setModelMarkers(model, "myMarkerId", [{
           severity: severity, 
           message: message, 
@@ -80,14 +90,16 @@
           startColumn: range.startColumn, 
           endLineNumber: range.endLineNumber, 
           endColumn: range.endColumn 
-        }]); // Set marker on the model
+        }]); 
 
-        submitButton.disabled = true; // Disable the submit button
+        // Disable the submit button
+        submitButton.disabled = true; 
       }
       else{
-        monaco.editor.setModelMarkers(editor.getModel(), "myMarkerId", []); // Clear Errors
-        submitButton.disabled = false;  // Enable the submit button
-        //TODO: show if correct
+        // Clear Errors
+        monaco.editor.setModelMarkers(editor.getModel(), "myMarkerId", []); 
+        // Enable the submit button
+        submitButton.disabled = false;  
       }
     }
 
@@ -96,15 +108,14 @@
       throttleAndDebounceLogEditorValue(editor.getValue());
     });
 
-
-    const submitBtn = document.getElementById("submitButton");
-
+    // Get the submit button
+    const submitBtn = document.getElementById("submitButton");  
+    // Add an Eventlistener to the button
     submitBtn.addEventListener("click", () => {
       const content = editor.getValue();
       sendContent(content);
     });
-
-    // This is a mock, here the content gets sent to the server
+    // This is a mock, here the content gets sent to the server (Will be changed by enoum)
     function sendContent(content) {
       console.log(content);
     }
