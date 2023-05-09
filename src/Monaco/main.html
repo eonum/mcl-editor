@@ -1,5 +1,8 @@
+<script type="text/JavaScript" src = "./bundle.js"></script>
 <!-- Load the Monaco editor -->
 <script src="https://unpkg.com/monaco-editor@0.25.2/min/vs/loader.js"></script>
+
+
 
 <!-- Initialize the Monaco editor -->
 <script>
@@ -72,21 +75,18 @@
   <div id="container" style="height: 50px; box-sizing: border-box;"></div> 
 </div>
 
-<script src = "../Parser/medcodelogic3.js"></script>
 	<script>
-
-		function parseInput(valueMonaco) {
-		
+    
+    function parseInput(valueMonaco) {		
 			// Call function from our parser (peg$parse) with the user input as a parameter
 			try {
-				var result = peg$parse(valueMonaco);
+				var result = Parser.parse(valueMonaco);
 				document.getElementById("output").innerHTML = result;
 			} catch (e) {
 				document.getElementById("output").innerHTML = "Error: " + e.message;
 			}
 		}
 	</script>
+
 <br><br><br><br><br><br><br><br><br><br><br><br>
 <div id="output"></div>
-
-

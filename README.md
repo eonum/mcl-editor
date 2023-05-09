@@ -61,3 +61,7 @@ For further question:
 ## Monaco
 - See [this](https://microsoft.github.io/monaco-editor/typedoc/enums/languages.CompletionItemKind.html) for additional information about the CompletionItemKind
 - See [this](https://microsoft.github.io/monaco-editor/typedoc/interfaces/languages.CompletionItem.html#documentation) for additional information about CompletionItems
+
+
+webpack.confi.js does export the bundle files function via the command Parse.yourFunction(). We only use the .prase() function
+In the HTML the script for the bundle (actual Parser) needs to be initialized BEFORE the loader of the Monaco Code Editor
