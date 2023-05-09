@@ -55,6 +55,10 @@
       }
     }
 
+    /** 
+     * Checks the content of the editor and marks any errors in the editor with a red underline
+     * Disables the submit button if there is an error in the content, otherwise enables it
+     */
     function checkContent(){
       // If the editor is empty remove all errors and disable the submit button
       if (!editor.getValue().trim()) {
