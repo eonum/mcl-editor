@@ -33,7 +33,7 @@
        * If timerId is not null, it means that a timer has already been set, and we don't want to log the editor value again until the timer has completed.
        */
       if (!timerId) {
-        console.log(editor.getValue());
+        checkContent(); // Send the content to the parser
         timerId = setTimeout(() => {
           timerId = null;
         }, throttleDelay);
@@ -48,21 +48,34 @@
       if (value != lastValue) {
         clearTimeout(timerId);
         timerId = setTimeout(() => {
-          console.log(editor.getValue());
+          checkContent(); // Send the content to the parser
           timerId = null;
         }, delay);
         lastValue = value;
       }
     }
 
+    function checkContent(){
+      error = parseInput(editor.getValue());
+      // If there is an error mark it
+      if(error){
+        var model = monaco.editor.getModels()[0]; // Get the first model of the editor
+        var lineNumber = error.location.start.line - 1; // Convert 1-based to 0-based line number
+        var range = new monaco.Range(lineNumber, error.location.start.column - 1, lineNumber, error.location.end.column - 1); // Create range object for the error
+        var severity = monaco.MarkerSeverity.Error; // Set severity to Error
+        var message = error.message; // Use error message as the marker message
+        monaco.editor.setModelMarkers(model, "myMarkerId", [{ severity: severity, message: message, startLineNumber: range.startLineNumber, startColumn: range.startColumn, endLineNumber: range.endLineNumber, endColumn: range.endColumn }]); // Set marker on the model
+      }
+      else{
+        // Clear Errors
+        monaco.editor.setModelMarkers(editor.getModel(), "myMarkerId", []);
+        //TODO: show if correct
+      }
+    }
+
     // Call this method whenever the content of the editor is changed
     editor.onDidChangeModelContent(() => {
       throttleAndDebounceLogEditorValue(editor.getValue());
-    });
-
-    // Get the current value of the editor
-    editor.onDidChangeModelContent(() => {
-      parseInput(editor.getValue());
     });
   });
 </script>
@@ -76,14 +89,21 @@
 </div>
 
 	<script>
-    
-    function parseInput(valueMonaco) {		
+    function parseInput(valueMonaco) {	
+      if (!valueMonaco.trim()) {
+        // Ignore parsing when the editor's content is empty
+        document.getElementById("output").innerHTML = "";
+        return;
+      }
+      
 			// Call function from our parser (peg$parse) with the user input as a parameter
 			try {
 				var result = Parser.parse(valueMonaco);
 				document.getElementById("output").innerHTML = result;
+        return
 			} catch (e) {
 				document.getElementById("output").innerHTML = "Error at location: " + e.location.end.offset;
+        return e
 			}
 		}
 	</script>
