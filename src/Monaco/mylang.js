@@ -520,6 +520,11 @@ require(['vs/editor/editor.main'], function() {
       provideHover: function(model, position) {
         // Get the current word and its range
         var word = model.getWordAtPosition(position);
+
+        if(!word){
+          return
+        }
+
         var range = {
             startLineNumber: position.lineNumber,
             endLineNumber: position.lineNumber,
@@ -534,7 +539,7 @@ require(['vs/editor/editor.main'], function() {
 
         /** @todo What should happen if multiple things match the possibility? */
         if(!filteredToolTip){
-          return null;
+          returns
         }
         
         return {
