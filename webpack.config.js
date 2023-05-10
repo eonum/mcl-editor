@@ -4,7 +4,7 @@ module.exports = {
     mode: 'development',
     entry: path.resolve(__dirname, 'src/Monaco/medcodelogic.js'), //additional entries
     output:{
-        path: path.resolve(__dirname, 'dist.js'),
+        path: path.resolve( 'src/Monaco'),
         filename: 'bundle.js',
         library: 'Parser',
         libraryTarget: 'umd',

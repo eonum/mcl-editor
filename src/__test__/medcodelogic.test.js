@@ -15,7 +15,7 @@
  * 
  **/
 
-const medcodelogic = require('../Peggy/medcodelogic.js');
+const medcodelogic = require('../Monaco/medcodelogic.js');
 
 test('test_comparison', () =>{
     expect(medcodelogic.parse("los > 12")).toBe("los > 12")
