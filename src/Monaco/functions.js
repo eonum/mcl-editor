@@ -1,6 +1,8 @@
 
 /**
  * This file holds all the functions used in the parser grammer medcodelogic.pegjs
+ * 
+ * There are automatic jest tests to be found in functions.test.js
  */
 
 const variablesJson = require('./variables.json')
