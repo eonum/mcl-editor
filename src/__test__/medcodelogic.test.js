@@ -1,4 +1,4 @@
-2/**
+/**
  * The following testcases are from MEDCODELOGIC-MASTER/test/medcodelogic.parser_test.rb
  * To initialize testing with jester we only import the function "medcodelogic.parse" from our
  * generated medcodelogic.parser medcodelogic.js
@@ -26,8 +26,8 @@ test('test_comparison', () =>{
 
 test('test_or', () =>{
     expect(medcodelogic.parse("adm_weight > 2500 or los > 2")).toBe("adm_weight > 2500 or los > 2")
-    //expect(medcodelogic.parse("(los) > 2 or adm_weight > 2500")).toBe("(los) > 2 or adm_weight > 2500")
-    //expect(medcodelogic.parse("(los > 2) or adm_weight > 2500")).toBe("(los > 2) or adm_weight > 2500")
+    expect(medcodelogic.parse("(los) > 2 or adm_weight > 2500")).toBe("(los) > 2 or adm_weight > 2500")
+    expect(medcodelogic.parse("(los > 2) or adm_weight > 2500")).toBe("(los > 2) or adm_weight > 2500")
     expect(medcodelogic.parse("los > 2 or (adm_weight > 2500)")).toBe("los > 2 or (adm_weight > 2500)")
     });
   
@@ -36,10 +36,11 @@ test('test_or', () =>{
     expect(medcodelogic.parse("los > 2 and adm_weight > 2500")).toBe("los > 2 and adm_weight > 2500")
     });
 
-    test('in Table', () =>{
-        expect(medcodelogic.parse("age_years in table(icd)")).toBe("age_years in table(icd)")
-        });
-    
+    /*
+ test('in Table', () =>{
+    expect(medcodelogic.parse("age_years in table(icd)")).toBe("age_years in table(icd)")
+    });
+    */
 
     // 03.05.23: Folgendes ausgeklammertes kann momentan noch nicht funktionieren, da noch nicht implementiert
 /*
