@@ -538,15 +538,18 @@ require(['vs/editor/editor.main'], function() {
         });
 
         /** @todo What should happen if multiple things match the possibility? */
-        if(!filteredToolTip){
-          returns
+        if(!filteredToolTip || filteredToolTip.length == 0){
+          return{
+            range: range,
+            contents: [{value: ""}]
+          }
         }
-        
-        return {
-          range: range,
-          contents: [{value: filteredToolTip[0].documentation}] // Get the first of the options and show documentation as tooltip
+        else{
+          return {
+            range: range,
+            contents: [{value: filteredToolTip[0].documentation}] // Get the first of the options and show documentation as tooltip
+          }
         }
-
       }
     });
 
