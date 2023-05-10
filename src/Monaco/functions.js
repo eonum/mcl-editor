@@ -60,7 +60,7 @@ function isCodeVariable(input){
     var modifiedInput = arrayToString(input)
 
     for (const key in variablesJson) {
-        // Compare the field_name (variable name)  to the input from the parser
+        // Compare the field_name (variable name) to the input from the parser
         if (key == modifiedInput && variablesJson[key].variable_type =='code'){ 
             return true
         }
@@ -71,7 +71,7 @@ function isCodeVariable(input){
 /**
  * Returns an string. This function also turns multidimensional arrays into string.
  * @Attention if the input is a number (not inside an array) we get no return.
- * This should not be an issue, since input is alawys an array.  
+ * This should not be an issue, since input is always an array.  
 **/
 const arrayToString = (arr) => {
     let str = '';
