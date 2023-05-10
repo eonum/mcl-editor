@@ -15,13 +15,16 @@ var currentGlobalVariableName;
 var currentGlobalData;
 
 function isInTable(input){
-    var modifiedInput = arrayToString(input)
+  var modifiedInput = arrayToString(input)
 
-       for (const key in tablesJson) {
-        // Compare key with input
-        if (key == modifiedInput){return true}
-    }
-        {return false}
+     for(const key in tablesJson){
+      for(let i = 0; i< tablesJson[key].length; i++){
+        if(tablesJson[key][i] != undefined){
+          if (tablesJson[key][i].label == modifiedInput){return true}
+      }
+  }  
+} 
+{return false}
 }
 
 // this function is not done yet
@@ -904,7 +907,7 @@ function peg$parse(input, options) {
     s1 = peg$parsecalculation();
     if (s1 === peg$FAILED) {
       s1 = peg$parsenumberOrVariableNumber();
-
+    }
     if (s1 !== peg$FAILED) {
       s2 = peg$parse_();
       s3 = peg$parseoperator();
@@ -913,7 +916,6 @@ function peg$parse(input, options) {
         s5 = peg$parsecalculation();
         if (s5 === peg$FAILED) {
           s5 = peg$parsenumberOrVariableNumber();
-
         }
         if (s5 !== peg$FAILED) {
           s1 = [s1, s2, s3, s4, s5];
@@ -998,7 +1000,7 @@ function peg$parse(input, options) {
     var s0, s1, s2, s3, s4, s5, s6, s7;
 
     s0 = peg$currPos;
-    s1 = peg$parsevariable();
+    s1 = peg$parsevariableCode();
     if (s1 !== peg$FAILED) {
       s2 = peg$parse_();
       if (input.substr(peg$currPos, 3) === peg$c6) {
@@ -1535,13 +1537,7 @@ function peg$parse(input, options) {
     s1 = peg$parselparen();
     if (s1 !== peg$FAILED) {
       s2 = peg$parse_();
-      s3 = peg$parsenumber();
-      if (s3 === peg$FAILED) {
-        s3 = peg$parsestring();
-        if (s3 === peg$FAILED) {
-          s3 = peg$parsecode();
-        }
-      }
+      s3 = peg$parsecode();
       if (s3 !== peg$FAILED) {
         s4 = [];
         s5 = peg$currPos;
@@ -1555,7 +1551,7 @@ function peg$parse(input, options) {
         }
         if (s7 !== peg$FAILED) {
           s8 = peg$parse_();
-          s9 = peg$parsenumber();
+          s9 = peg$parsecode();
           if (s9 !== peg$FAILED) {
             s6 = [s6, s7, s8, s9];
             s5 = s6;
@@ -1566,12 +1562,6 @@ function peg$parse(input, options) {
         } else {
           peg$currPos = s5;
           s5 = peg$FAILED;
-        }
-        if (s5 === peg$FAILED) {
-          s5 = peg$parsestring();
-          if (s5 === peg$FAILED) {
-            s5 = peg$parsecode();
-          }
         }
         while (s5 !== peg$FAILED) {
           s4.push(s5);
@@ -1586,7 +1576,7 @@ function peg$parse(input, options) {
           }
           if (s7 !== peg$FAILED) {
             s8 = peg$parse_();
-            s9 = peg$parsenumber();
+            s9 = peg$parsecode();
             if (s9 !== peg$FAILED) {
               s6 = [s6, s7, s8, s9];
               s5 = s6;
@@ -1597,12 +1587,6 @@ function peg$parse(input, options) {
           } else {
             peg$currPos = s5;
             s5 = peg$FAILED;
-          }
-          if (s5 === peg$FAILED) {
-            s5 = peg$parsestring();
-            if (s5 === peg$FAILED) {
-              s5 = peg$parsecode();
-            }
           }
         }
         s5 = peg$parse_();
