@@ -22,9 +22,9 @@ function isInTable(input){
 }
 
 /**
- * Returns true if the input is a validvariable name AND safes itsvariable name
- * and data type in the globalvariables. If thevariable name is not valid, return false.
- * This function applies only, for the left side of an operator.
+ * Returns true if the input is a valid variable name AND safes its variable name
+ * and data type in the global variables. If the variable name is not valid, it returns false.
+ * This function applies only for the left side of an operator.
 */
 function isStringVariable(input){
     var modifiedInput = arrayToString(input)
