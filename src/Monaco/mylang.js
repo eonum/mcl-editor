@@ -399,6 +399,8 @@ require(['vs/editor/editor.main'], function() {
       variables: mylangVariables.map(variable => variable.label),
 
       tables: mylangTables.map(table => table.label),
+
+      functions: ['inList', 'sides', 'date', 'max', 'min', 'inTable', 'not'],
       
       operators: [
       '=', '>', '<', '!', '~', '?', ':', '==', '<=', '>=', '!=',
@@ -421,6 +423,7 @@ require(['vs/editor/editor.main'], function() {
                                        '@keywords': 'keyword',
                                        '@variables': 'variable',
                                        "@tables" : "module",
+                                       '@functions': 'function',
                                        '@default': 'identifier' }}],
           [/[A-Z][\w\$]*/, { cases: {  "@tables" : "module",
                                         "@default": 'type.identifier' }}],  // to show class names nicely

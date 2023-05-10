@@ -11,8 +11,25 @@
     var editor = monaco.editor.create(document.getElementById('container'), {
       value: '',
       language: 'mylang',
-      lineNumbers: false
+      lineNumbers: false,
+      defineTheme: 'mylang'
     });
+
+    //define theme
+    monaco.editor.defineTheme('mylang', {
+        base: 'vs',
+        rules: [
+          { token: 'string', foreground: '#ff872f' }, // Define the color for the 'string' token
+          { token: 'number', foreground: '#ff872f' }, // Define the color for the 'number' token
+          { token: 'operator', foreground: '#000000', fontStyle: 'bold' }, // Define the color and font style for the 'operator' token
+          { token: 'variable', foreground: '#117700' }, // Define the color for the 'variable' token
+          { token: 'keyword', foreground: '#00008b' }, // Define the color for the 'keyword' token
+          { token: 'function', foreground: '#aa1111' } // Define the color for the 'function' token
+        ]
+      });
+
+    monaco.editor.setTheme('mylang');
+
 
     // Timer used for delay in output
     let timerId;
