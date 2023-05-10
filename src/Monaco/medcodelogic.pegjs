@@ -146,7 +146,7 @@ inTable
 = variable _ ('not' / "") _ 'in table' _ tableList _
 
 function
-= (Date / min_max / where / sides / not / empty / dates / lookup) _
+= (("'")* _ Date _ ("'")* / min_max / where / sides / not / empty / dates / lookup) _
 
 min_max
 = ('min'/'max') _ lparen _ list _ rparen _
@@ -190,7 +190,7 @@ stringOrVariableString
 = ((variableString / string) _) / (lparen (variableString / string) rparen _)
 
 dateOrVariableDate
-= ((variableDate / Date) _) / (lparen (variableDate / Date) rparen _)
+= ((variableDate / ("'")* _ Date _("'")* _) _) / (lparen (variableDate / ("'")*_ Date _ ("'")*) rparen _)
 
 codeOrVariableCode
 = ((variableCode / code) _) / (lparen (variableCode / code) rparen _)
@@ -218,7 +218,7 @@ Date
 
 
 code
-= "'" ([a-zA-Z0-9*][.a-zA-Z0-9*]*) "'" _
+=  ([a-zA-Z0-9*][.a-zA-Z0-9*]*) _
 
 operator
 = ('>=' / '<=' / '>' / '<' / '=' / '!=') _
