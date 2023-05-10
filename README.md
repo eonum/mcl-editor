@@ -62,12 +62,21 @@ For further question:
 - See [this](https://microsoft.github.io/monaco-editor/typedoc/enums/languages.CompletionItemKind.html) for additional information about the CompletionItemKind
 - See [this](https://microsoft.github.io/monaco-editor/typedoc/interfaces/languages.CompletionItem.html#documentation) for additional information about CompletionItems
 
+<<<<<<< HEAD
 <h1>Peggy Parser</h1>
+=======
+## Peggy Parser
+In the file medcodelogic.pegjs you can find the current medcodelogic grammar rules.
+<br>
+Based on this rules the parser will be generated using the following commands (make sure peggy is installed globally):
+<br>
+create the parser.js from your grammar: -peggy medcodelogic.pegjs <br>
 
-ATTENTION: Do not change anything in the following files:
-- Monaco/bundle.js
-- Peggy/medcodelogic.js
-if you need to change the parsing grammer follow the following instructions.
+<h3>HTML</h3>
+
+The current HTML file does support the parser input and output. The output is either a string (when parsed successfully)<br>
+or an exception with the error warning.
+>>>>>>> 6dd9b2f359361fba4ec9a36b3478b15313d18eea
 
 This is the parser for medcodelogic.<br>
 In the file medcodelogic.pegjs you can find the current medcodelogic grammar rules.
