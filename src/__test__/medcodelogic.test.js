@@ -1,4 +1,4 @@
-/**
+2/**
  * The following testcases are from MEDCODELOGIC-MASTER/test/medcodelogic.parser_test.rb
  * To initialize testing with jester we only import the function "medcodelogic.parse" from our
  * generated medcodelogic.parser medcodelogic.js
