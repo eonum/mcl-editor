@@ -486,9 +486,6 @@ require(['vs/editor/editor.main'], function() {
     // Responsible for the autocompletion
     monaco.languages.registerCompletionItemProvider('mylang', {
       provideCompletionItems: function(model, position) {
-        // The maximum options being suggested.
-        const maxOptions = 10
-        
         // Get the current word and its range
         var word = model.getWordUntilPosition(position);
         var range = {
@@ -503,10 +500,12 @@ require(['vs/editor/editor.main'], function() {
           return suggestion.label.startsWith(word.word);
         });
 
+        // The maximum options being suggested.
+        const MAX_OPTIONS = 10
         // Cuts of if there are too many options
         /** @todo Check if there is a better way to handle this. The problem is if there are too many options, just one is shown at the moment */
-        if(filteredSuggestions.length > maxOptions){
-          filteredSuggestions = filteredSuggestions.slice(0,maxOptions);
+        if(filteredSuggestions.length > MAX_OPTIONS){
+          filteredSuggestions = filteredSuggestions.slice(0,MAX_OPTIONS);
         }
 
         // Create a CompletionList from the suggestions and return it
