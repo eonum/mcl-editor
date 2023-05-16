@@ -400,7 +400,9 @@ require(['vs/editor/editor.main'], function() {
 
       tables: mylangTables.map(table => table.label),
 
-      functions: ['inList', 'sides', 'date', 'max', 'min', 'inTable', 'not'],
+      functions: mylangFunctions.map(f => f.label),
+
+      //functions: ['inList', 'sides', 'date', 'max', 'min', 'inTable', 'not'],
       
       operators: [
       '=', '>', '<', '!', '~', '?', ':', '==', '<=', '>=', '!=',
