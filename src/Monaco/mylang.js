@@ -537,10 +537,16 @@ require(['vs/editor/editor.main'], function() {
         if(!filteredSuggestions || filteredSuggestions.length == 0){
           return
         }
+
+        const hoverContents = filteredSuggestions.map(suggestion => ({
+          value: suggestion.detail && suggestion.documentation
+            ? suggestion.detail + '\n\n' + suggestion.documentation
+            : suggestion.detail || suggestion.documentation
+        }));
         
         return {
           range: range,
-          contents: filteredSuggestions[0]
+          contents: hoverContents
         }
       }
     });
