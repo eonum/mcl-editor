@@ -401,9 +401,8 @@ require(['vs/editor/editor.main'], function() {
       tables: mylangTables.map(table => table.label),
 
       functions: mylangFunctions.map(f => f.label),
-
-      //functions: ['inList', 'sides', 'date', 'max', 'min', 'inTable', 'not'],
       
+      /** @todo check if these are all needed */
       operators: [
       '=', '>', '<', '!', '~', '?', ':', '==', '<=', '>=', '!=',
       '&&', '||', '++', '--', '+', '-', '*', '/', '&', '|', '^', '%',
@@ -487,28 +486,22 @@ require(['vs/editor/editor.main'], function() {
 
     // Responsible for the autocompletion
     monaco.languages.registerCompletionItemProvider('mylang', {
-      provideCompletionItems: function(model, position) {
-        // Get the current word and its range
-        var word = model.getWordUntilPosition(position);
-        var range = {
-          startLineNumber: position.lineNumber,
-          endLineNumber: position.lineNumber,
-          startColumn: word.startColumn,
-          endColumn: word.endColumn
+      provideCompletionItems: (model, position) => {
+        const currentWord = model.getWordUntilPosition(position);
+
+        const { lineNumber, column } = position;
+        const range = {
+          startLineNumber: lineNumber,
+          endLineNumber: lineNumber,
+          startColumn: currentWord.startColumn,
+          endColumn: currentWord.endColumn
         };
 
-        // Filter the suggestions based on the current word
-        let filteredSuggestions = getAllLists().filter(suggestion => {
-          return suggestion.label.startsWith(word.word);
-        });
+        const MAX_SUGGESTIONS = 50;
 
-        // The maximum options being suggested.
-        const MAX_OPTIONS = 10
-        // Cuts of if there are too many options
-        /** @todo Check if there is a better way to handle this. The problem is if there are too many options, just one is shown at the moment */
-        if(filteredSuggestions.length > MAX_OPTIONS){
-          filteredSuggestions = filteredSuggestions.slice(0,MAX_OPTIONS);
-        }
+        const filteredSuggestions = getAllLists()
+          .filter(suggestion => suggestion.label.startsWith(currentWord.word))
+          .slice(0, MAX_SUGGESTIONS);
 
         // Create a CompletionList from the suggestions and return it
         return {
