@@ -488,8 +488,7 @@ require(['vs/editor/editor.main'], function() {
     monaco.languages.registerCompletionItemProvider('mylang', {
       provideCompletionItems: (model, position) => {
         const currentWord = model.getWordUntilPosition(position);
-
-        const { lineNumber, column } = position;
+        const { lineNumber } = position;
         const range = {
           startLineNumber: lineNumber,
           endLineNumber: lineNumber,
@@ -498,54 +497,50 @@ require(['vs/editor/editor.main'], function() {
         };
 
         const MAX_SUGGESTIONS = 50;
-
         const filteredSuggestions = getAllLists()
           .filter(suggestion => suggestion.label.startsWith(currentWord.word))
           .slice(0, MAX_SUGGESTIONS);
 
-        // Create a CompletionList from the suggestions and return it
-        return {
+        const completionList = {
           suggestions: filteredSuggestions,
           incomplete: true,
           replaceRange: range
         };
+
+        return completionList
       }
     });
 
     // Responsible for the hover tooltips
     monaco.languages.registerHoverProvider('mylang', {
-      provideHover: function(model, position) {
-        // Get the current word and its range
-        var word = model.getWordAtPosition(position);
+      provideHover: (model, position) => {
+        const currentWord = model.getWordAtPosition(position);
 
-        if(!word){
+        if(!currentWord){
           return
         }
 
-        var range = {
-            startLineNumber: position.lineNumber,
-            endLineNumber: position.lineNumber,
-            startColumn: word.startColumn,
-            endColumn: word.endColumn
+        const { lineNumber } = position;
+        const range = {
+            startLineNumber: lineNumber,
+            endLineNumber: lineNumber,
+            startColumn: currentWord.startColumn,
+            endColumn: currentWord.endColumn
         };
 
         // Filter the suggestions based on the current word
-        let filteredToolTip = getAllLists().filter(suggestion => {
-          return suggestion.label.includes(word.word);
+        const filteredSuggestions = getAllLists().filter(suggestion => {
+          return suggestion.label.includes(currentWord.word);
         });
 
         /** @todo What should happen if multiple things match the possibility? */
-        if(!filteredToolTip || filteredToolTip.length == 0){
-          return{
-            range: range,
-            contents: [{value: ""}]
-          }
+        if(!filteredSuggestions || filteredSuggestions.length == 0){
+          return
         }
-        else{
-          return {
-            range: range,
-            contents: [{value: filteredToolTip[0].documentation}] // Get the first of the options and show documentation as tooltip
-          }
+        
+        return {
+          range: range,
+          contents: filteredSuggestions[0]
         }
       }
     });
@@ -574,8 +569,5 @@ require(['vs/editor/editor.main'], function() {
       // Add error marker to model
       monaco.editor.setModelMarkers(model, 'myMarker', [marker]);
     }
-    
-
   })
-  
 });
