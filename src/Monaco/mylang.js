@@ -399,7 +399,10 @@ require(['vs/editor/editor.main'], function() {
       variables: mylangVariables.map(variable => variable.label),
 
       tables: mylangTables.map(table => table.label),
+
+      functions: mylangFunctions.map(f => f.label),
       
+      /** @todo check if these are all needed */
       operators: [
       '=', '>', '<', '!', '~', '?', ':', '==', '<=', '>=', '!=',
       '&&', '||', '++', '--', '+', '-', '*', '/', '&', '|', '^', '%',
@@ -421,6 +424,7 @@ require(['vs/editor/editor.main'], function() {
                                        '@keywords': 'keyword',
                                        '@variables': 'variable',
                                        "@tables" : "module",
+                                       '@functions': 'function',
                                        '@default': 'identifier' }}],
           [/[A-Z][\w\$]*/, { cases: {  "@tables" : "module",
                                         "@default": 'type.identifier' }}],  // to show class names nicely
@@ -480,75 +484,71 @@ require(['vs/editor/editor.main'], function() {
 
     });
 
+    // https://microsoft.github.io/monaco-editor/typedoc/functions/languages.registerCompletionItemProvider.html
     // Responsible for the autocompletion
     monaco.languages.registerCompletionItemProvider('mylang', {
-      provideCompletionItems: function(model, position) {
-        // The maximum options being suggested.
-        const maxOptions = 10
-        
-        // Get the current word and its range
-        var word = model.getWordUntilPosition(position);
-        var range = {
-          startLineNumber: position.lineNumber,
-          endLineNumber: position.lineNumber,
-          startColumn: word.startColumn,
-          endColumn: word.endColumn
+      provideCompletionItems: (model, position) => {
+        const currentWord = model.getWordUntilPosition(position);
+        const { lineNumber } = position;
+        const range = {
+          startLineNumber: lineNumber,
+          endLineNumber: lineNumber,
+          startColumn: currentWord.startColumn,
+          endColumn: currentWord.endColumn
         };
 
-        // Filter the suggestions based on the current word
-        let filteredSuggestions = getAllLists().filter(suggestion => {
-          return suggestion.label.startsWith(word.word);
-        });
+        const MAX_SUGGESTIONS = 50;
+        const filteredSuggestions = getAllLists()
+          .filter(suggestion => suggestion.label.startsWith(currentWord.word))
+          .slice(0, MAX_SUGGESTIONS);
 
-        // Cuts of if there are too many options
-        /** @todo Check if there is a better way to handle this. The problem is if there are too many options, just one is shown at the moment */
-        if(filteredSuggestions.length > maxOptions){
-          filteredSuggestions = filteredSuggestions.slice(0,maxOptions);
-        }
-
-        // Create a CompletionList from the suggestions and return it
-        return {
+        const completionList = {
           suggestions: filteredSuggestions,
           incomplete: true,
           replaceRange: range
         };
+
+        return completionList
       }
     });
 
+    // https://microsoft.github.io/monaco-editor/typedoc/functions/languages.registerHoverProvider.html
     // Responsible for the hover tooltips
     monaco.languages.registerHoverProvider('mylang', {
-      provideHover: function(model, position) {
-        // Get the current word and its range
-        var word = model.getWordAtPosition(position);
+      provideHover: (model, position) => {
+        const currentWord = model.getWordAtPosition(position);
 
-        if(!word){
+        if(!currentWord){
           return
         }
 
-        var range = {
-            startLineNumber: position.lineNumber,
-            endLineNumber: position.lineNumber,
-            startColumn: word.startColumn,
-            endColumn: word.endColumn
+        const { lineNumber } = position;
+        const range = {
+            startLineNumber: lineNumber,
+            endLineNumber: lineNumber,
+            startColumn: currentWord.startColumn,
+            endColumn: currentWord.endColumn
         };
 
         // Filter the suggestions based on the current word
-        let filteredToolTip = getAllLists().filter(suggestion => {
-          return suggestion.label.includes(word.word);
+        const filteredSuggestions = getAllLists().filter(suggestion => {
+          return suggestion.label.includes(currentWord.word);
         });
 
         /** @todo What should happen if multiple things match the possibility? */
-        if(!filteredToolTip || filteredToolTip.length == 0){
-          return{
-            range: range,
-            contents: [{value: ""}]
-          }
+        if(!filteredSuggestions || filteredSuggestions.length == 0){
+          return
         }
-        else{
-          return {
-            range: range,
-            contents: [{value: filteredToolTip[0].documentation}] // Get the first of the options and show documentation as tooltip
-          }
+
+        const hoverContents = filteredSuggestions.map(suggestion => ({
+          value: suggestion.detail && suggestion.documentation
+            ? suggestion.detail + '\n\n' + suggestion.documentation
+            : suggestion.detail || suggestion.documentation
+        }));
+        
+        return {
+          range: range,
+          contents: hoverContents
         }
       }
     });
@@ -577,8 +577,5 @@ require(['vs/editor/editor.main'], function() {
       // Add error marker to model
       monaco.editor.setModelMarkers(model, 'myMarker', [marker]);
     }
-    
-
   })
-  
 });

@@ -63,20 +63,6 @@ For further question:
 - See [this](https://microsoft.github.io/monaco-editor/typedoc/interfaces/languages.CompletionItem.html#documentation) for additional information about CompletionItems
 
 
-# Peggy Parser #
-
-In the file medcodelogic.pegjs you can find the current medcodelogic grammar rules.
-
-Based on this rules the parser will be generated using the following commands (make sure peggy is installed globally):
-
-create the parser.js from your grammar: $peggy medcodelogic.pegjs <br>
-
-### Test Parsing with Peggy ###
-You can simply test Peggy like the following:
-'''
-$peggy medcodelogic.pegjs -t 'adm_weight > 2500'
-'''
-
 ## Frontend / GUI ##
 
 The current HTML file does support the parser input and output. The output is either a string (when parsed successfully) or an exception with the error warning.
