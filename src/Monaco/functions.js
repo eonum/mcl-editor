@@ -1,13 +1,21 @@
 
 /**
  * This file holds all the functions used in the parser grammer medcodelogic.pegjs
- * 
+ * All functions will be exported at the end of the file and imported via require function
+ * into the medcodelogic.pegjs file
  * There are automatic jest tests to be found in functions.test.js
  */
 
+//import tables and variables
 const variablesJson = require('./variables.json')
 const tablesJson = require('./tables.json')
 
+/**
+ * This function takes an array from current parser rule and checks if the
+ * the input is a valid table name.
+ * @param {array} input 
+ * @returns true if input is in tables.json or false if not
+ */
 function isInTable(input){
   var modifiedInput = arrayToString(input)
 
@@ -22,10 +30,11 @@ function isInTable(input){
 }
 
 /**
- * Returns true if the input is a valid variable name AND safes its variable name
- * and data type in the global variables. If the variable name is not valid, it returns false.
- * This function applies only for the left side of an operator.
-*/
+ * This function takes an array from current parser rule and checks if the
+ * the input is a valid string variable.
+ * @param {array} input 
+ * @returns true if input is in variables.json and string variable or false if not
+ */
 function isStringVariable(input){
     var modifiedInput = arrayToString(input)
 
@@ -36,6 +45,12 @@ function isStringVariable(input){
         {return false}
 }
 
+/**
+ * This function takes an array from current parser rule and checks if the
+ * the input is a valid number variable.
+ * @param {array} input 
+ * @returns true if input is in variables.json and number variable or false if not
+ */
 function isNumberVariable(input){
     var modifiedInput = arrayToString(input)
 
@@ -46,6 +61,12 @@ function isNumberVariable(input){
         {return false}
 }
 
+/**
+ * This function takes an array from current parser rule and checks if the
+ * the input is a valid date variable.
+ * @param {array} input 
+ * @returns true if input is in variables.json and date variable or false if not
+ */
 function isDateVariable(input){
     var modifiedInput = arrayToString(input)
 
@@ -56,6 +77,12 @@ function isDateVariable(input){
         {return false}
 }
 
+/**
+ * This function takes an array from current parser rule and checks if the
+ * the input is a valid code variable.
+ * @param {array} input 
+ * @returns true if input is in variables.json and code variable or false if not
+ */
 function isCodeVariable(input){
     var modifiedInput = arrayToString(input)
 
@@ -69,10 +96,10 @@ function isCodeVariable(input){
 }
 
 /**
- * Returns an string. This function also turns multidimensional arrays into string.
- * @Attention if the input is a number (not inside an array) we get no return.
- * This should not be an issue, since input is always an array.  
-**/
+ * Takes an array input from the parser and converts it to a string
+ * @param {array} arr
+ * @returns string
+ */
 const arrayToString = (arr) => {
     let str = '';
     for(let i = 0; i < arr.length; i++){
@@ -85,7 +112,9 @@ const arrayToString = (arr) => {
     return str;
  }
 
- //export all the functions, so they can be accesed 
+ /**
+  * Export all the functions, so they can be accesed by the grammar medcodelogic.pegjs
+  */ 
  module.exports = {
     isInTable: isInTable,
     isStringVariable: isStringVariable,
