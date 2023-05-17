@@ -49,7 +49,7 @@
      * @param delay (number): The amount of time before the editor's content is output. Default is 1 second delay.
      * @param throttleDelay (number): The amount of time before the editor's content is output when typing slowly. Default is 300 milliseconds.
      */
-    function throttleAndDebounceLogEditorValue(value, delay = 400, throttleDelay = 300) {
+    function throttleAndDebounce(value, delay = 400, throttleDelay = 300) {
       // Throttle
       /**
        * This statement checks whether timerId is currently null or not. 
@@ -89,9 +89,9 @@
       const isEmpty = content === ""
       // Get the error, undefined if no error thrown
       const error = parseInput(editor.getValue());
-      hasError = !error;
+      hasError = error;
 
-      if (isEmpty || hasError) {
+      if (isEmpty || !hasError) {
         clearErrors();
         return;
       }
@@ -125,35 +125,27 @@
       monaco.editor.setModelMarkers(editor.getModel(), "myMarkerId", []);
     }
 
-    // Call this method whenever the content of the editor is changed
     editor.onDidChangeModelContent(() => {
-      throttleAndDebounceLogEditorValue(editor.getValue());
+      throttleAndDebounce(editor.getValue());
     });
 
-    // Get the submit button
     const submitBtn = document.getElementById("submitButton");
-    // Add an Eventlistener to the button
     submitBtn.addEventListener("click", () => {
       const content = editor.getValue();
-  
-      if (hasError) {
-        // Display error message and confirmation dialog
-        const confirmMessage = "There seems to be an error in your code. Do you still want to proceed?";
-        const confirmDialog = confirm(confirmMessage);
+      const isConfirmed = confirm("There seems to be an error in your code. Do you still want to proceed?")
 
-        if (confirmDialog) {
-          sendContent(content);
-        }
-      } else {
-        sendContent(content);
+      if (hasError && !isConfirmed) {
+        return;
       }
+
+      sendContent(content);
     });
+
   
     // This is a mock, here the content gets sent to the server (Will be changed by enoum)
     function sendContent(content) {
       console.log(content);
     }
-
   });
 </script>
 
