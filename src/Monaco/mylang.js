@@ -484,6 +484,7 @@ require(['vs/editor/editor.main'], function() {
 
     });
 
+    // https://microsoft.github.io/monaco-editor/typedoc/functions/languages.registerCompletionItemProvider.html
     // Responsible for the autocompletion
     monaco.languages.registerCompletionItemProvider('mylang', {
       provideCompletionItems: (model, position) => {
@@ -511,6 +512,7 @@ require(['vs/editor/editor.main'], function() {
       }
     });
 
+    // https://microsoft.github.io/monaco-editor/typedoc/functions/languages.registerHoverProvider.html
     // Responsible for the hover tooltips
     monaco.languages.registerHoverProvider('mylang', {
       provideHover: (model, position) => {
