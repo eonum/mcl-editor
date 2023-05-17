@@ -22,7 +22,6 @@
       },
     });
 
-    //define theme
     monaco.editor.defineTheme('mylang', {
         base: 'vs',
         rules: [
@@ -83,58 +82,47 @@
     let hasError = false;
 
     /** 
-     * Checks the content of the editor and marks any errors in the editor with a red underline
-     * Disables the submit button if there is an error in the content, otherwise enables it
+     * 
      */
     function checkContent(){
-      // If the editor is empty remove all errors and disable the submit button
-      if (!editor.getValue().trim()) {
-        monaco.editor.setModelMarkers(editor.getModel(), "myMarkerId", []); // Clear Errors
-        //submitButton.disabled = true; // Disable the submit button
-        hasError = false;
+      const content = editor.getValue().trim();
+      const isEmpty = content === ""
+      // Get the error, undefined if no error thrown
+      const error = parseInput(editor.getValue());
+      hasError = !error;
+
+      if (isEmpty || hasError) {
+        clearErrors();
         return;
       }
 
-      // Get the error, undefined if no error thrown
-      error = parseInput(editor.getValue());
+      const model = monaco.editor.getModels()[0]; 
+      const severity = monaco.MarkerSeverity.Error; 
+      const message = error.message; 
+      const { line: startLine, column: startColumn } = error.location.start;
+      const { column: endColumn } = error.location.end;
 
-      // If there is an error mark it
-      if(error){
-        // Get the first model of the editor
-        var model = monaco.editor.getModels()[0]; 
+      const wordLength = endColumn - startColumn;
 
-        // Set severity to Error
-        var severity = monaco.MarkerSeverity.Error; 
-        // Use error message as the marker message
-        var message = error.message; 
+      const errorRange = new monaco.Range(
+        startLine, 
+        startColumn, 
+        startLine, 
+        startColumn + wordLength
+      );
 
-        // Get the range of the falsy word
-        var lineNumber = error.location.start.line;
-        let columnNumber = error.location.start.column;
-        let wordLength = error.location.end.column - error.location.start.column;
-        let range = new monaco.Range(lineNumber, columnNumber, lineNumber, columnNumber + wordLength); // Create range object for the error
+      monaco.editor.setModelMarkers(model, "myMarkerId", [{
+        severity: severity, 
+        message: message, 
+        startLineNumber: errorRange.startLineNumber, 
+        startColumn: errorRange.startColumn, 
+        endLineNumber: errorRange.endLineNumber, 
+        endColumn: errorRange.endColumn 
+      }]); 
+    }
 
-        // Set marker on the model
-        monaco.editor.setModelMarkers(model, "myMarkerId", [{
-          severity: severity, 
-          message: message, 
-          startLineNumber: range.startLineNumber, 
-          startColumn: range.startColumn, 
-          endLineNumber: range.endLineNumber, 
-          endColumn: range.endColumn 
-        }]); 
-
-        // Disable the submit button
-        // submitButton.disabled = true; 
-        hasError = true;
-      }
-      else{
-        // Clear Errors
-        monaco.editor.setModelMarkers(editor.getModel(), "myMarkerId", []); 
-        // Enable the submit button
-        //submitButton.disabled = false;  
-        hasError = false;
-      }
+    function clearErrors(){
+      monaco.editor.setModelMarkers(editor.getModel(), "myMarkerId", []);
     }
 
     // Call this method whenever the content of the editor is changed
