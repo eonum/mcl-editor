@@ -5,99 +5,7 @@
 "use strict";
 
 
-
-//import variablesJson from '.variables.json'
-
-const variablesJson = require('../../variables.json')
-const tablesJson = require('../../tables.json')
-var currentGlobalDataType;
-var currentGlobalVariableName;
-var currentGlobalData;
-
-function isInTable(input){
-  var modifiedInput = arrayToString(input)
-
-     for(const key in tablesJson){
-      for(let i = 0; i< tablesJson[key].length; i++){
-        if(tablesJson[key][i] != undefined){
-          if (tablesJson[key][i].label == modifiedInput){return true}
-      }
-  }  
-} 
-{return false}
-}
-
-// this function is not done yet
-function isInList(input){
-    var modifiedInput = arrayToString(input)
-    return true;
-}
-
-
-/**
- * Returns true if the input is a validvariable name AND safes itsvariable name
- * and data type in the globalvariables. If thevariable name is not valid, return false.
- * This function applies only, for the left side of an operator.
-*/
-function isStringVariable(input){
-    var modifiedInput = arrayToString(input)
-
-    for (const key in variablesJson) {
-        // Compare the field_name (variable name)  to the input from the parser
-        if (key == modifiedInput && variablesJson[key].variable_type =='string'){return true}
-    }
-        {return false}
-}
-
-function isNumberVariable(input){
-    var modifiedInput = arrayToString(input)
-
-    for (const key in variablesJson) {
-        // Compare the field_name (variable name)  to the input from the parser
-        if (key == modifiedInput && variablesJson[key].variable_type =='number'){return true}
-    }
-        {return false}
-}
-
-function isDateVariable(input){
-    var modifiedInput = arrayToString(input)
-
-    for (const key in variablesJson) {
-        // Compare the field_name (variable name)  to the input from the parser
-        if (key == modifiedInput && variablesJson[key].variable_type =='date'){return true}
-    }
-        {return false}
-}
-
-function isCodeVariable(input){
-    var modifiedInput = arrayToString(input)
-
-    for (const key in variablesJson) {
-        // Compare the field_name (variable name)  to the input from the parser
-        if (key == modifiedInput && variablesJson[key].variable_type =='code'){ 
-            return true
-        }
-    }
-        {return false}
-}
-
-
-/**
- * Returns an string. This function also turns multidimensional arrays into string.
- * @Attention if the input is a number (not inside an array) we get no return.
- * This should not be an issue, since input is alawys an array.  
-**/
-const arrayToString = (arr) => {
-    let str = '';
-    for(let i = 0; i < arr.length; i++){
-       if(Array.isArray(arr[i])){
-          str += `${arrayToString(arr[i])}`;
-       }else{
-          str += `${arr[i]}`;
-       };
-    };
-    return str;
- };
+const Function = require("./functions.js")
 
 function peg$subclass(child, parent) {
   function C() { this.constructor = child; }
@@ -362,17 +270,17 @@ function peg$parse(input, options) {
   var peg$e42 = peg$classExpectation(["\t", "\n", "\r"], false, false);
   var peg$e43 = peg$classExpectation([["0", "9"], ["a", "z"], ["A", "Z"], "_"], false, false);
 
-  var peg$f0 = function(expression) {return arrayToString(expression)};
-  var peg$f1 = function(variableName) {return isStringVariable(variableName) };
-  var peg$f2 = function(variableName) {return arrayToString(variableName)};
-  var peg$f3 = function(variableName) {return isNumberVariable(variableName) };
-  var peg$f4 = function(variableName) {return arrayToString(variableName)};
-  var peg$f5 = function(variableName) {return isDateVariable(variableName) };
-  var peg$f6 = function(variableName) {return arrayToString(variableName)};
-  var peg$f7 = function(variableName) {return isCodeVariable(variableName) };
-  var peg$f8 = function(variableName) {return arrayToString(variableName)};
-  var peg$f9 = function(digits) {return arrayToString(digits)};
-  var peg$f10 = function(tableName) {return isInTable(tableName)};
+  var peg$f0 = function(expression) {return Function.arrayToString(expression)};
+  var peg$f1 = function(variableName) {return Function.isStringVariable(variableName) };
+  var peg$f2 = function(variableName) {return Function.arrayToString(variableName)};
+  var peg$f3 = function(variableName) {return Function.isNumberVariable(variableName) };
+  var peg$f4 = function(variableName) {return Function.arrayToString(variableName)};
+  var peg$f5 = function(variableName) {return Function.isDateVariable(variableName) };
+  var peg$f6 = function(variableName) {return Function.arrayToString(variableName)};
+  var peg$f7 = function(variableName) {return Function.isCodeVariable(variableName) };
+  var peg$f8 = function(variableName) {return Function.arrayToString(variableName)};
+  var peg$f9 = function(digits) {return Function.arrayToString(digits)};
+  var peg$f10 = function(tableName) {return Function.isInTable(tableName)};
   var peg$f11 = function(tableName) {return tableName};
   var peg$currPos = 0;
   var peg$savedPos = 0;
