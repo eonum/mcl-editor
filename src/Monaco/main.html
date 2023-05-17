@@ -74,6 +74,8 @@
       }
     }
 
+    let hasError = false;
+
     /** 
      * Checks the content of the editor and marks any errors in the editor with a red underline
      * Disables the submit button if there is an error in the content, otherwise enables it
@@ -82,7 +84,8 @@
       // If the editor is empty remove all errors and disable the submit button
       if (!editor.getValue().trim()) {
         monaco.editor.setModelMarkers(editor.getModel(), "myMarkerId", []); // Clear Errors
-        submitButton.disabled = true; // Disable the submit button
+        //submitButton.disabled = true; // Disable the submit button
+        hasError = false;
         return;
       }
 
@@ -116,13 +119,15 @@
         }]); 
 
         // Disable the submit button
-        submitButton.disabled = true; 
+        // submitButton.disabled = true; 
+        hasError = true;
       }
       else{
         // Clear Errors
         monaco.editor.setModelMarkers(editor.getModel(), "myMarkerId", []); 
         // Enable the submit button
-        submitButton.disabled = false;  
+        //submitButton.disabled = false;  
+        hasError = false;
       }
     }
 
@@ -132,11 +137,22 @@
     });
 
     // Get the submit button
-    const submitBtn = document.getElementById("submitButton");  
+    const submitBtn = document.getElementById("submitButton");
     // Add an Eventlistener to the button
     submitBtn.addEventListener("click", () => {
       const content = editor.getValue();
-      sendContent(content);
+  
+      if (hasError) {
+        // Display error message and confirmation dialog
+        const confirmMessage = "There seems to be an error in your code. Do you still want to proceed?";
+        const confirmDialog = confirm(confirmMessage);
+
+        if (confirmDialog) {
+          sendContent(content);
+        }
+      } else {
+        sendContent(content);
+      }
     });
   
     // This is a mock, here the content gets sent to the server (Will be changed by enoum)
@@ -156,7 +172,7 @@
 <div style="border: 3px solid #ccc; padding: 5px; max-width: 600px;">
   <div id="container" style="height: 50px; box-sizing: border-box;"></div> 
   <!-- Submit Button -->
-  <button id = "submitButton" disabled>Submit</button>
+  <button id = "submitButton">Submit</button>
 </div>
 
 <script>
