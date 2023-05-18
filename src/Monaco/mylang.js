@@ -165,15 +165,15 @@ require(['vs/editor/editor.main'], function() {
   // Define the list of functions
   const mylangFunctions = [
     { 
-      label: 'inList', 
+      label: 'in list', 
       kind: monaco.languages.CompletionItemKind.Function,
-      insertText: 'inList()', 
+      insertText: 'in list()', 
       documentation: [
         'Beschreibung',
         '','Gibt alle Codes zurück, die in beiden Listen enthalten sind.',
         '',
         'Signatur',
-        '', 'List of Codes inList(List of Codes, List of Codes)', '',
+        '', 'List of Codes in list(List of Codes, List of Codes)', '',
         '',
         'Parameter',
         '- List of Codes (Liste von Codes): Die beiden zu vergleichenden Listen von Codes.',
@@ -182,7 +182,7 @@ require(['vs/editor/editor.main'], function() {
         '- (Liste von Codes): Die Codes, die in beiden Listen enthalten sind.',
         '',
         'Beispiel',
-        '', 'inList([1, 2, 3], [2, 3, 4])', '// Gibt zurück: [2, 3]', ''
+        '', 'in list([1, 2, 3], [2, 3, 4])', '// Gibt zurück: [2, 3]', ''
         ].join('\n')
     },
     { 
@@ -207,15 +207,15 @@ require(['vs/editor/editor.main'], function() {
         ].join('\n')
     },
     { 
-      label: 'inTable',
+      label: 'in table',
       kind: monaco.languages.CompletionItemKind.Function, 
-      insertText: 'inTable()',
+      insertText: 'in table()',
       documentation: [
         'Beschreibung',
         '','Gibt alle Codes zurück, die in der Liste und in mindestens einer der Tabellen enthalten sind.',
         '',
         'Signatur',
-        '', 'Liste von Codes inTable(Liste von Codes, Liste von Tabellen)', '',
+        '', 'Liste von Codes in table(Liste von Codes, Liste von Tabellen)', '',
         '',
         'Parameter',
         '- Liste von Codes (Liste): Eine Liste von Codes.',
@@ -225,7 +225,7 @@ require(['vs/editor/editor.main'], function() {
         '- (Liste): Die Liste der Codes, die in der Liste und in mindestens einer der Tabellen enthalten sind.',
         '',
         'Beispiel',
-        '', 'inTable(["A", "B", "C"], [{ "A": true, "B": false }, { "B": true, "C": true }])', '// Returns: ["A", "B", "C"]', ''
+        '', 'in table(["A", "B", "C"], [{ "A": true, "B": false }, { "B": true, "C": true }])', '// Returns: ["A", "B", "C"]', ''
         ].join('\n') 
     },
     { 
