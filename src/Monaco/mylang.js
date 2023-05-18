@@ -162,56 +162,6 @@ require(['vs/editor/editor.main'], function() {
     },
   ];
 
-  /** @todo Are these really necessary / needed in medcoedelogic? */
-  // Define the list of type keywords
-  const mylangTypeKeywords = [
-    {
-      label: "boolean",
-      kind: monaco.languages.CompletionItemKind.TypeParameter,
-      insertText: "boolean"
-    },
-    {
-      label: "double",
-      kind: monaco.languages.CompletionItemKind.TypeParameter,
-      insertText: "double"
-    },
-    {
-      label: "byte",
-      kind: monaco.languages.CompletionItemKind.TypeParameter,
-      insertText: "byte"
-    },
-    {
-      label: "int",
-      kind: monaco.languages.CompletionItemKind.TypeParameter,
-      insertText: "int"
-    },
-    {
-      label: "short",
-      kind: monaco.languages.CompletionItemKind.TypeParameter,
-      insertText: "short"
-    },
-    {
-      label: "char",
-      kind: monaco.languages.CompletionItemKind.TypeParameter,
-      insertText: "char"
-    },
-    {
-      label: "void",
-      kind: monaco.languages.CompletionItemKind.TypeParameter,
-      insertText: "void"
-    },
-    {
-      label: "long",
-      kind: monaco.languages.CompletionItemKind.TypeParameter,
-      insertText: "long"
-    },
-    {
-      label: "float",
-      kind: monaco.languages.CompletionItemKind.TypeParameter,
-      insertText: "float"
-    },
-  ];
-
   // Define the list of functions
   const mylangFunctions = [
     { 
@@ -393,8 +343,6 @@ require(['vs/editor/editor.main'], function() {
     monaco.languages.setMonarchTokensProvider('mylang', {
   
       keywords: mylangKeywords.map(kw => kw.label),
-      
-      typeKeywords: mylangTypeKeywords.map(tkw => tkw.label),
 
       variables: mylangVariables.map(variable => variable.label),
 
@@ -417,14 +365,13 @@ require(['vs/editor/editor.main'], function() {
           
         root: [
           // identifiers and keywords
-          [/[a-z_$][\w$]*/, { cases: { '@typeKeywords': 'keyword',
-                                       '@keywords': 'keyword',
+          [/[a-z_$][\w$]*/, { cases: { '@keywords': 'keyword',
                                        '@variables': 'variable',
                                        "@tables" : "module",
                                        '@functions': 'function',
                                        '@default': 'identifier' }}],
           [/[A-Z][\w\$]*/, { cases: {  "@tables" : "module",
-                                        "@default": 'type.identifier' }}],  // to show class names nicely
+                                       "@default": 'type.identifier' }}],  // to show class names nicely
     
           // whitespace
           { include: '@whitespace' },
