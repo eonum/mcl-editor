@@ -113,17 +113,23 @@ require(['vs/editor/editor.main'], function() {
     {
       label: 'and',
       kind: monaco.languages.CompletionItemKind.Keyword,
-      insertText: 'and',
+      insertText: 'and ${1:logical_expression}',
+      insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet
     },
     {
       label: 'or',
       kind: monaco.languages.CompletionItemKind.Keyword,
       insertText: 'or',
+      insertText: 'or ${1:logical_expression}',
+      insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet
     },
     {
       label: 'if',
       kind: monaco.languages.CompletionItemKind.Keyword,
-      insertText: 'if',
+      //insertText: 'if',
+      /** @todo is this the correct way how this should be used? */
+      insertText: 'if(${1:logical_expression}, ${2:value_if_true}, ${3:value_if_false})',
+      insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet
     },
     {
       label: 'break',
@@ -133,7 +139,8 @@ require(['vs/editor/editor.main'], function() {
     {
       label: 'else',
       kind: monaco.languages.CompletionItemKind.Keyword,
-      insertText: 'else',
+      insertText: 'else(${1:value})',
+      insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet
     },
     {
       label: 'return',
@@ -166,8 +173,9 @@ require(['vs/editor/editor.main'], function() {
   const mylangFunctions = [
     { 
       label: 'in list', 
-      kind: monaco.languages.CompletionItemKind.Function,
-      insertText: 'in list()', 
+      kind: monaco.languages.CompletionItemKind.Function, 
+      insertText: 'in list(${1:Wert1}, ${2:Wert2}, ${3:...})',
+      insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
       documentation: [
         'Beschreibung',
         '','Gibt alle Codes zurück, die in beiden Listen enthalten sind.',
@@ -188,7 +196,8 @@ require(['vs/editor/editor.main'], function() {
     { 
       label: 'not', 
       kind: monaco.languages.CompletionItemKind.Function, 
-      insertText: 'not()',
+      insertText: 'not(${1:logical_expression})',
+      insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
       documentation: [
         'Beschreibung',
         '','Negiert einen booleschen Wert.',
@@ -209,7 +218,8 @@ require(['vs/editor/editor.main'], function() {
     { 
       label: 'in table',
       kind: monaco.languages.CompletionItemKind.Function, 
-      insertText: 'in table()',
+      insertText: 'in table(${1:tableName})',
+      insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
       documentation: [
         'Beschreibung',
         '','Gibt alle Codes zurück, die in der Liste und in mindestens einer der Tabellen enthalten sind.',
@@ -231,7 +241,8 @@ require(['vs/editor/editor.main'], function() {
     { 
       label: 'min', 
       kind: monaco.languages.CompletionItemKind.Function, 
-      insertText: 'min()',
+      insertText: 'min(${Wert})',
+      insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
       documentation: [
         'Beschreibung',
         '','Gibt das Minimum in einer Liste zurück.',
@@ -252,7 +263,8 @@ require(['vs/editor/editor.main'], function() {
     { 
       label: 'max', 
       kind: monaco.languages.CompletionItemKind.Function, 
-      insertText: 'max()',
+      insertText: 'max(${Wert})',
+      insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
       documentation: [
         'Beschreibung',
         '','Gibt das Maximum in einer Liste zurück.',
@@ -273,7 +285,8 @@ require(['vs/editor/editor.main'], function() {
     { 
       label: 'dates', 
       kind: monaco.languages.CompletionItemKind.Function, 
-      insertText: 'dates()',
+      insertText: 'dates(${1:Liste})',
+      insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
       documentation: [
         'Beschreibung',
         '','Gibt das Datum in Tagen für jeden Code (Prozedur) zurück.',
@@ -294,7 +307,8 @@ require(['vs/editor/editor.main'], function() {
     { 
       label: 'date', 
       kind: monaco.languages.CompletionItemKind.Function, 
-      insertText: 'date()',
+      insertText: 'date(${1:JJJJ}${2:MM}${3:DD})',
+      insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
       documentation: [
         'Beschreibung',
         '','Parst eine Zeichenfolge in ein Datum.',
@@ -312,7 +326,8 @@ require(['vs/editor/editor.main'], function() {
     { 
       label: 'sides', 
       kind: monaco.languages.CompletionItemKind.Function, 
-      insertText: 'sides()',
+      insertText: 'sides(${1:prozeduren}, ${2:seitigkeit})',
+      insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
       documentation: [
         'Beschreibung',
         '','Gibt die Codes zurück, die mit einer bestimmten Seite (Prozedur) angegeben sind.',
