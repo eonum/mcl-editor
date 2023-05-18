@@ -532,7 +532,7 @@ require(['vs/editor/editor.main'], function() {
 
         // Filter the suggestions based on the current word
         const filteredSuggestions = getAllLists().filter(suggestion => {
-          return suggestion.label.includes(currentWord.word);
+          return suggestion.label === currentWord.word;
         });
 
         /** @todo What should happen if multiple things match the possibility? */
