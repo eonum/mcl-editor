@@ -96,7 +96,7 @@ require(['vs/editor/editor.main'], function() {
   let mylangVariables;
   let mylangTables;
 
-  /** @todo There is a bug where after entering a keyword the editor doesn't work properly */
+  /** @todo There is a bug where after entering a keyword the editor doesn't work properly (see issue #14 and #25) */
   /** @todo Are these really necessary / needed in medcoedelogic? */
   // Define the list of keywords
   const mylangKeywords = [
