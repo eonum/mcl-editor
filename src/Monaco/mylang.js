@@ -441,17 +441,17 @@ require(['vs/editor/editor.main'], function() {
           endColumn: currentWord.endColumn
         };
 
-        const MAX_SUGGESTIONS = 50;
+        //const MAX_SUGGESTIONS = 100;
         const filteredSuggestions = getAllLists()
-          .filter(suggestion => suggestion.label.startsWith(currentWord.word))
-          .slice(0, MAX_SUGGESTIONS);
+          .filter(suggestion => suggestion.label.includes(currentWord.word))
+          //.slice(0, MAX_SUGGESTIONS);
 
         const completionList = {
           suggestions: filteredSuggestions,
           incomplete: true,
           replaceRange: range
         };
-
+    
         return completionList
       }
     });
