@@ -114,14 +114,23 @@ require(['vs/editor/editor.main'], function() {
       label: 'and',
       kind: monaco.languages.CompletionItemKind.Keyword,
       insertText: 'and ${1:logical_expression}',
-      insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet
+      insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+      detail: "und",
+      documentation: "Beide Aussagen müssen \"wahr\" sein, damit die Prüfung \"wahr\" zurückgibt. \n\n"
+       + "Beispiel: \n\n"
+       + "1 < 2 and 3 > 1 gibt “wahr” zurück, da Aussage 1 und 2 stimmen. \n\n"
+       + "1 > 2 and 3 > 1 gibt “falsch” zurück, da Aussage 1 falsch ist."
     },
     {
       label: 'or',
       kind: monaco.languages.CompletionItemKind.Keyword,
-      insertText: 'or',
       insertText: 'or ${1:logical_expression}',
-      insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet
+      insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+      detail: "oder",
+      documentation: "Beide Aussagen müssen \"falsch\" sein, damit die Prüfung \"falsch\" zurückgibt. \n\n"
+       + "Beispiel: \n\n"
+       + "1 > 2 or 3 > 1 gibt “wahr” zurück da Aussage 2 stimmt. \n\n"
+       + "1 > 2 or 3 < 1 gibt “falsch” zurück, da Aussage 1 und 2 falsch sind."
     },
     {
       label: 'if',
@@ -129,7 +138,8 @@ require(['vs/editor/editor.main'], function() {
       //insertText: 'if',
       /** @todo is this the correct way how this should be used? */
       insertText: 'if(${1:logical_expression}, ${2:value_if_true}, ${3:value_if_false})',
-      insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet
+      insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+      documentation: "Beispiel: if(los < 0, los = 0, los = los)"
     },
     {
       label: 'break',
