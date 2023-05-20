@@ -67,18 +67,17 @@ For further question:
 
 The current HTML file does support the parser input and output. The output is either a string (when parsed successfully) or an exception with the error warning.
 
-The generated parser can be used as an object in JS. But for use in the browser we had to bundle it. 
-Therefore we used Webpack. All the necessary configurations are to be found in the webpack.config.js.
+The generated parser can be used as an object in JS. But for use in the browser we had to bundle it. Therefore we used Webpack. All the necessary configurations are to be found in the webpack.config.js.
 
-If you want to use the function .parse from the bundled file (bundle.js) use Parser.parse(). We only use the .parse() function.
-
-This function is exported (see webpack.config.js).
+If you want to use the function .parse from the bundled file (bundle.js) use Parser.parse(). We only use the .parse() function. This function is exported (see webpack.config.js).
 
 In the HTML the script for the bundle (actual Parser) needs to be initialized BEFORE the loader of the Monaco Code Editor.
 
-If you change something in the grammar (medcodelogic.pegjs)  run $peggy src/Peggy/medcodelogic.pegjs after your changes.
+If you change something in the grammar (medcodelogic.pegjs)  run `peggy src/Peggy/medcodelogic.pegjs` after your changes. This will generate a new parser (medcodelogic.js). Then use `yarn run build` to bundle the parser. Make sure to delet the old bundle.js file in the Monaco directory and replace the newly generated bundle.js file in the Monaco folder.
 
-This will generate a new parser (medcodelogic.js). Then use npm run build to bundle the parser. Make sure to delet the old bundle.js file in the Monaco directory and replace the newly generated bundle.js file in the Monaco folder.
+Alternativlely you can run src/deploy.sh to execute both the peggy and the build command.
 
+Or use the 
 ## Running
 The submit button is disabled as long as there is no content or an error. Pressing the submit button will log the valid content into the console.
+
