@@ -5,7 +5,6 @@
   * nächsten Regel gesprungen. Aus diesem Grund wird bei fehlerhafter Eingabe erst nach dem Prüfen
   * ALLER Regeln eine Exception geworfen.
   *
-  * TODO: Aktualisieren!
 **/
 
 {{

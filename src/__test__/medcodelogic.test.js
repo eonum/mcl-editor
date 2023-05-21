@@ -22,10 +22,24 @@ test('test_comparison', () =>{
     
     // does not work - do we have to define proper throwned errors?
     //expect(medcodelogic.parse("los > 12 >")).toBe("*peg$SyntaxError*")
+    
     expect(medcodelogic.parse("adm_weight > 2500")).toBe("adm_weight > 2500")
     expect(medcodelogic.parse("12 <= los")).toBe("12 <= los")
     });
 
+
+test("Test description", () => {
+    const t = () => {
+        throw new TypeError();
+    };
+    expect(t).toThrow(TypeError);
+    });
+
+test("Test description", () => {
+    expect(medcodelogic.parse("los > 12 >")).toThrow(peg$SyntaxError);
+    });
+
+    // expect(medcodelogic.parse("los > 12 >")).toThow()
 
 test('test_or', () =>{
     expect(medcodelogic.parse("adm_weight > 2500 or los > 2")).toBe("adm_weight > 2500 or los > 2")
