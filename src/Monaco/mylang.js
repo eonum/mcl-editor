@@ -96,7 +96,7 @@ require(['vs/editor/editor.main'], function() {
   let mylangVariables;
   let mylangTables;
 
-  /** @todo There is a bug where after entering a keyword the editor doesn't work properly (see issue #14 and #25) */
+  /** @todo There is a bug where after entering a keyword the editor doesn't work properly */
   /** @todo Are these really necessary / needed in medcoedelogic? */
   // Define the list of keywords
   const mylangKeywords = [
@@ -113,33 +113,17 @@ require(['vs/editor/editor.main'], function() {
     {
       label: 'and',
       kind: monaco.languages.CompletionItemKind.Keyword,
-      insertText: 'and ${1:logical_expression}',
-      insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-      detail: "und",
-      documentation: "Beide Aussagen müssen \"wahr\" sein, damit die Prüfung \"wahr\" zurückgibt. \n\n"
-       + "Beispiel: \n\n"
-       + "1 < 2 and 3 > 1 gibt “wahr” zurück, da Aussage 1 und 2 stimmen. \n\n"
-       + "1 > 2 and 3 > 1 gibt “falsch” zurück, da Aussage 1 falsch ist."
+      insertText: 'and',
     },
     {
       label: 'or',
       kind: monaco.languages.CompletionItemKind.Keyword,
-      insertText: 'or ${1:logical_expression}',
-      insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-      detail: "oder",
-      documentation: "Beide Aussagen müssen \"falsch\" sein, damit die Prüfung \"falsch\" zurückgibt. \n\n"
-       + "Beispiel: \n\n"
-       + "1 > 2 or 3 > 1 gibt “wahr” zurück da Aussage 2 stimmt. \n\n"
-       + "1 > 2 or 3 < 1 gibt “falsch” zurück, da Aussage 1 und 2 falsch sind."
+      insertText: 'or',
     },
     {
       label: 'if',
       kind: monaco.languages.CompletionItemKind.Keyword,
-      //insertText: 'if',
-      /** @todo is this the correct way how this should be used? */
-      insertText: 'if(${1:logical_expression}, ${2:value_if_true}, ${3:value_if_false})',
-      insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
-      documentation: "Beispiel: if(los < 0, los = 0, los = los)"
+      insertText: 'if',
     },
     {
       label: 'break',
@@ -149,8 +133,7 @@ require(['vs/editor/editor.main'], function() {
     {
       label: 'else',
       kind: monaco.languages.CompletionItemKind.Keyword,
-      insertText: 'else(${1:value})',
-      insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet
+      insertText: 'else',
     },
     {
       label: 'return',
@@ -179,19 +162,69 @@ require(['vs/editor/editor.main'], function() {
     },
   ];
 
+  /** @todo Are these really necessary / needed in medcoedelogic? */
+  // Define the list of type keywords
+  const mylangTypeKeywords = [
+    {
+      label: "boolean",
+      kind: monaco.languages.CompletionItemKind.TypeParameter,
+      insertText: "boolean"
+    },
+    {
+      label: "double",
+      kind: monaco.languages.CompletionItemKind.TypeParameter,
+      insertText: "double"
+    },
+    {
+      label: "byte",
+      kind: monaco.languages.CompletionItemKind.TypeParameter,
+      insertText: "byte"
+    },
+    {
+      label: "int",
+      kind: monaco.languages.CompletionItemKind.TypeParameter,
+      insertText: "int"
+    },
+    {
+      label: "short",
+      kind: monaco.languages.CompletionItemKind.TypeParameter,
+      insertText: "short"
+    },
+    {
+      label: "char",
+      kind: monaco.languages.CompletionItemKind.TypeParameter,
+      insertText: "char"
+    },
+    {
+      label: "void",
+      kind: monaco.languages.CompletionItemKind.TypeParameter,
+      insertText: "void"
+    },
+    {
+      label: "long",
+      kind: monaco.languages.CompletionItemKind.TypeParameter,
+      insertText: "long"
+    },
+    {
+      label: "float",
+      kind: monaco.languages.CompletionItemKind.TypeParameter,
+      insertText: "float"
+    },
+  ];
+
   // Define the list of functions
   const mylangFunctions = [
     { 
-      label: 'in list', 
-      kind: monaco.languages.CompletionItemKind.Function, 
-      insertText: 'in list(${1:Wert1}, ${2:Wert2}, ${3:...})',
+      label: 'inList', 
+      kind: monaco.languages.CompletionItemKind.Function,
+      insertText: 'inList($0)', 
       insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
       documentation: [
         'Beschreibung',
         '','Gibt alle Codes zurück, die in beiden Listen enthalten sind.',
         '',
         'Signatur',
-        '', 'List of Codes in list(List of Codes, List of Codes)', '',
+        '', 'List of Codes inList(List of Codes, List of Codes)', '',
         '',
         'Parameter',
         '- List of Codes (Liste von Codes): Die beiden zu vergleichenden Listen von Codes.',
@@ -200,13 +233,13 @@ require(['vs/editor/editor.main'], function() {
         '- (Liste von Codes): Die Codes, die in beiden Listen enthalten sind.',
         '',
         'Beispiel',
-        '', 'in list([1, 2, 3], [2, 3, 4])', '// Gibt zurück: [2, 3]', ''
+        '', 'inList([1, 2, 3], [2, 3, 4])', '// Gibt zurück: [2, 3]', ''
         ].join('\n')
     },
     { 
       label: 'not', 
       kind: monaco.languages.CompletionItemKind.Function, 
-      insertText: 'not(${1:logical_expression})',
+      insertText: 'not($0)',
       insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
       documentation: [
         'Beschreibung',
@@ -226,16 +259,16 @@ require(['vs/editor/editor.main'], function() {
         ].join('\n')
     },
     { 
-      label: 'in table',
+      label: 'inTable',
       kind: monaco.languages.CompletionItemKind.Function, 
-      insertText: 'in table(${1:tableName})',
+      insertText: 'inTable($0)',
       insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
       documentation: [
         'Beschreibung',
         '','Gibt alle Codes zurück, die in der Liste und in mindestens einer der Tabellen enthalten sind.',
         '',
         'Signatur',
-        '', 'Liste von Codes in table(Liste von Codes, Liste von Tabellen)', '',
+        '', 'Liste von Codes inTable(Liste von Codes, Liste von Tabellen)', '',
         '',
         'Parameter',
         '- Liste von Codes (Liste): Eine Liste von Codes.',
@@ -245,13 +278,13 @@ require(['vs/editor/editor.main'], function() {
         '- (Liste): Die Liste der Codes, die in der Liste und in mindestens einer der Tabellen enthalten sind.',
         '',
         'Beispiel',
-        '', 'in table(["A", "B", "C"], [{ "A": true, "B": false }, { "B": true, "C": true }])', '// Returns: ["A", "B", "C"]', ''
+        '', 'inTable(["A", "B", "C"], [{ "A": true, "B": false }, { "B": true, "C": true }])', '// Returns: ["A", "B", "C"]', ''
         ].join('\n') 
     },
     { 
       label: 'min', 
       kind: monaco.languages.CompletionItemKind.Function, 
-      insertText: 'min(${Wert})',
+      insertText: 'min($0)',
       insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
       documentation: [
         'Beschreibung',
@@ -273,7 +306,7 @@ require(['vs/editor/editor.main'], function() {
     { 
       label: 'max', 
       kind: monaco.languages.CompletionItemKind.Function, 
-      insertText: 'max(${Wert})',
+      insertText: 'max($0)',
       insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
       documentation: [
         'Beschreibung',
@@ -295,7 +328,7 @@ require(['vs/editor/editor.main'], function() {
     { 
       label: 'dates', 
       kind: monaco.languages.CompletionItemKind.Function, 
-      insertText: 'dates(${1:Liste})',
+      insertText: 'dates($0)',
       insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
       documentation: [
         'Beschreibung',
@@ -317,7 +350,7 @@ require(['vs/editor/editor.main'], function() {
     { 
       label: 'date', 
       kind: monaco.languages.CompletionItemKind.Function, 
-      insertText: 'date(${1:JJJJ}${2:MM}${3:DD})',
+      insertText: 'date($0)',
       insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
       documentation: [
         'Beschreibung',
@@ -336,7 +369,7 @@ require(['vs/editor/editor.main'], function() {
     { 
       label: 'sides', 
       kind: monaco.languages.CompletionItemKind.Function, 
-      insertText: 'sides(${1:prozeduren}, ${2:seitigkeit})',
+      insertText: 'sides($0)',
       insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
       documentation: [
         'Beschreibung',
@@ -368,16 +401,20 @@ require(['vs/editor/editor.main'], function() {
     monaco.languages.setMonarchTokensProvider('mylang', {
   
       keywords: mylangKeywords.map(kw => kw.label),
+      
+      typeKeywords: mylangTypeKeywords.map(tkw => tkw.label),
 
       variables: mylangVariables.map(variable => variable.label),
 
       tables: mylangTables.map(table => table.label),
 
-      functions: mylangFunctions.map(f => f.label),
+      functions: ['inList', 'sides', 'date', 'max', 'min', 'inTable', 'not'],
       
-      /** @todo check if these are all needed */
       operators: [
-        '=', '>', '<', '!', '<=', '>=', '!=', '+', '-', '*', '/'
+      '=', '>', '<', '!', '~', '?', ':', '==', '<=', '>=', '!=',
+      '&&', '||', '++', '--', '+', '-', '*', '/', '&', '|', '^', '%',
+      '<<', '>>', '>>>', '+=', '-=', '*=', '/=', '&=', '|=', '^=',
+      '%=', '<<=', '>>=', '>>>='
       ],
       
       // we include these common regular expressions
@@ -390,13 +427,14 @@ require(['vs/editor/editor.main'], function() {
           
         root: [
           // identifiers and keywords
-          [/[a-z_$][\w$]*/, { cases: { '@keywords': 'keyword',
+          [/[a-z_$][\w$]*/, { cases: { '@typeKeywords': 'keyword',
+                                       '@keywords': 'keyword',
                                        '@variables': 'variable',
                                        "@tables" : "module",
                                        '@functions': 'function',
                                        '@default': 'identifier' }}],
           [/[A-Z][\w\$]*/, { cases: {  "@tables" : "module",
-                                       "@default": 'type.identifier' }}],  // to show class names nicely
+                                        "@default": 'type.identifier' }}],  // to show class names nicely
     
           // whitespace
           { include: '@whitespace' },
@@ -453,73 +491,105 @@ require(['vs/editor/editor.main'], function() {
 
     });
 
-    // https://microsoft.github.io/monaco-editor/typedoc/functions/languages.registerCompletionItemProvider.html
     // Responsible for the autocompletion
     monaco.languages.registerCompletionItemProvider('mylang', {
-      provideCompletionItems: (model, position) => {
-        const currentWord = model.getWordUntilPosition(position);
-        const { lineNumber } = position;
-        const range = {
-          startLineNumber: lineNumber,
-          endLineNumber: lineNumber,
-          startColumn: currentWord.startColumn,
-          endColumn: currentWord.endColumn
+      provideCompletionItems: function(model, position) {
+        // The maximum options being suggested.
+        const maxOptions = 10
+        
+        // Get the current word and its range
+        var word = model.getWordUntilPosition(position);
+        var range = {
+          startLineNumber: position.lineNumber,
+          endLineNumber: position.lineNumber,
+          startColumn: word.startColumn,
+          endColumn: word.endColumn
         };
 
-        //const MAX_SUGGESTIONS = 100;
-        const filteredSuggestions = getAllLists()
-          .filter(suggestion => suggestion.label.includes(currentWord.word))
-          //.slice(0, MAX_SUGGESTIONS);
+        // Filter the suggestions based on the current word
+        let filteredSuggestions = getAllLists().filter(suggestion => {
+          return suggestion.label.startsWith(word.word);
+        });
 
-        const completionList = {
+        // Cuts of if there are too many options
+        /** @todo Check if there is a better way to handle this. The problem is if there are too many options, just one is shown at the moment */
+        if(filteredSuggestions.length > maxOptions){
+          filteredSuggestions = filteredSuggestions.slice(0,maxOptions);
+        }
+
+        // Create a CompletionList from the suggestions and return it
+        return {
           suggestions: filteredSuggestions,
           incomplete: true,
           replaceRange: range
         };
-    
-        return completionList
       }
     });
 
-    // https://microsoft.github.io/monaco-editor/typedoc/functions/languages.registerHoverProvider.html
     // Responsible for the hover tooltips
     monaco.languages.registerHoverProvider('mylang', {
-      provideHover: (model, position) => {
-        const currentWord = model.getWordAtPosition(position);
+      provideHover: function(model, position) {
+        // Get the current word and its range
+        var word = model.getWordAtPosition(position);
 
-        if(!currentWord){
+        if(!word){
           return
         }
 
-        const { lineNumber } = position;
-        const range = {
-            startLineNumber: lineNumber,
-            endLineNumber: lineNumber,
-            startColumn: currentWord.startColumn,
-            endColumn: currentWord.endColumn
+        var range = {
+            startLineNumber: position.lineNumber,
+            endLineNumber: position.lineNumber,
+            startColumn: word.startColumn,
+            endColumn: word.endColumn
         };
 
         // Filter the suggestions based on the current word
-        const filteredSuggestions = getAllLists().filter(suggestion => {
-          return suggestion.label === currentWord.word;
+        let filteredToolTip = getAllLists().filter(suggestion => {
+          return suggestion.label.includes(word.word);
         });
 
         /** @todo What should happen if multiple things match the possibility? */
-        if(!filteredSuggestions || filteredSuggestions.length == 0){
-          return
+        if(!filteredToolTip || filteredToolTip.length == 0){
+          return{
+            range: range,
+            contents: [{value: ""}]
+          }
         }
-
-        const hoverContents = filteredSuggestions.map(suggestion => ({
-          value: suggestion.detail && suggestion.documentation
-            ? suggestion.detail + '\n\n' + suggestion.documentation
-            : suggestion.detail || suggestion.documentation
-        }));
-        
-        return {
-          range: range,
-          contents: hoverContents
+        else{
+          return {
+            range: range,
+            contents: [{value: filteredToolTip[0].documentation}] // Get the first of the options and show documentation as tooltip
+          }
         }
       }
     });
+
+    function markError(error) {
+      // Extract line number and column number from error message
+      const match = error.message.match(/at .*:(\d+):(\d+)/);
+      if (!match) {
+        console.error('Failed to extract line and column number from error message:', error.message);
+        return;
+      }
+      const lineNumber = parseInt(match[1]);
+      const column = parseInt(match[2]);
+    
+      // Create error marker
+      const model = editor.getModel();
+      const marker = {
+        startLineNumber: lineNumber,
+        endLineNumber: lineNumber,
+        startColumn: column,
+        endColumn: model.getLineMaxColumn(lineNumber),
+        message: error.message,
+        severity: monaco.MarkerSeverity.Error
+      };
+    
+      // Add error marker to model
+      monaco.editor.setModelMarkers(model, 'myMarker', [marker]);
+    }
+    
+
   })
+  
 });
