@@ -18,77 +18,54 @@
 const medcodelogic = require('../Monaco/medcodelogic.js');
 
 test('test_comparison', () =>{
-    expect(medcodelogic.parse("los > 12")).toBe("los > 12")
-    
-    // does not work - do we have to define proper throwned errors?
-    //expect(medcodelogic.parse("los > 12 >")).toBe("*peg$SyntaxError*")
-    
+    expect(medcodelogic.parse("los > 12")).toBe("los > 12")    
     expect(medcodelogic.parse("adm_weight > 2500")).toBe("adm_weight > 2500")
     expect(medcodelogic.parse("12 <= los")).toBe("12 <= los")
     });
 
-
-test("Test description", () => {
-    const t = () => {
-        throw new TypeError();
-    };
-    expect(t).toThrow(TypeError);
+test('test_comparison - throwing', () => {
+    expect(() => {
+        medcodelogic.parse("los > 12 >");
+    }).toThrow('Expected \" \", \"*\", \"+\", \"-\", \"/\", \"and\", \"or\", [\\t\\n\\r], or end of input but \">\" found.');
     });
 
-test("Test description", () => {
-    expect(medcodelogic.parse("los > 12 >")).toThrow(peg$SyntaxError);
-    });
-
-    // expect(medcodelogic.parse("los > 12 >")).toThow()
 
 test('test_or', () =>{
     expect(medcodelogic.parse("adm_weight > 2500 or los > 2")).toBe("adm_weight > 2500 or los > 2")
-    expect(medcodelogic.parse("(los) > 2 or adm_weight > 2500")).toBe("(los) > 2 or adm_weight > 2500")
+    expect(medcodelogic.parse("(los) > 2 or adm_weight > 2500")).toBe("(los) > 2 or adm_weight > 2500")       //TODO: doesn not run - shouldn't it?!
     expect(medcodelogic.parse("(los > 2) or adm_weight > 2500")).toBe("(los > 2) or adm_weight > 2500")
     expect(medcodelogic.parse("los > 2 or (adm_weight > 2500)")).toBe("los > 2 or (adm_weight > 2500)")
     });
-  
   
  test('test_and', () =>{
     expect(medcodelogic.parse("los > 2 and adm_weight > 2500")).toBe("los > 2 and adm_weight > 2500")
     });
 
-
  test('in Table', () =>{
-    expect(medcodelogic.parse("age_years in table(icd)")).toBe("age_years in table(icd)")
+    expect(medcodelogic.parse("age_years in table(icd)")).toBe("age_years in table(icd)")                       //TODO: doesn not run - shouldn't it?!
     });
-
-
-    // 03.05.23: Folgendes ausgeklammertes kann momentan noch nicht funktionieren, da noch nicht implementiert
 
 test('test_parentheses', () =>{
     medcodelogic.parse("( los )");
     medcodelogic.parse("(( los ))");
-    //expect(medcodelogic.parse("( los )")).toBe("( los )")
-    //expect(medcodelogic.parse("(( los ))")).toBe("(( los ))")
+    expect(medcodelogic.parse("( los )")).toBe("( los )")
+    expect(medcodelogic.parse("(( los ))")).toBe("(( los ))")
     });
     
-
-/*
 test('test_function_call', () =>{
-    expect(medcodelogic.parse("function()")).toBe("function()")
-    expect(medcodelogic.parse("function(argument)")).toBe("function(argument)")
-    expect(medcodelogic.parse("function(argument, \"argument\", argument)")).toBe("function(argument, \"argument\", argument)")    
+    expect(medcodelogic.parse("function()")).toBe("function()")                                                //TODO: doesn not run - shouldn't it?!
+    expect(medcodelogic.parse("function(argument)")).toBe("function(argument)")                                //TODO: doesn not run - shouldn't it?!
+    expect(medcodelogic.parse("function(argument, \"argument\", argument)")).toBe("function(argument, \"argument\", argument)")          //TODO: doesn not run - shouldn't it?! 
     });
-*/
 
-/*
 test('test_nested1', () =>{
-    expect(medcodelogic.parse('pdx in table(C) > 1')).toBe('pdx in table(C) > 1')
+    expect(medcodelogic.parse('pdx in table(C) > 1')).toBe('pdx in table(C) > 1')                               //TODO: doesn not run - shouldn't it?!
     });
-*/
 
-/*  
 test('test_nested2', () =>{
-    expect(medcodelogic.parse("los > 2 or (adm_weight and sdx in table(table1) > 3)")).toBe("los > 2 or (adm_weight and sdx in table(table1) > 3)")
+    expect(medcodelogic.parse("los > 2 or (adm_weight and sdx in table(table1) > 3)")).toBe("los > 2 or (adm_weight and sdx in table(table1) > 3)")     //TODO: doesn not run - shouldn't it?!
     });
 
 test('test_nested3', () =>{
-    expect(medcodelogic.parse("los > 2 * 6 AND los > 34 or adm_weight() > 3 Or los > 1 and sep = '01'")).toBe("los > 2 * 6 AND los > 34 or adm_weight() > 3 Or los > 1 and sep = '01'")       
+    expect(medcodelogic.parse("los > 2 * 6 AND los > 34 or adm_weight() > 3 Or los > 1 and sep = '01'")).toBe("los > 2 * 6 AND los > 34 or adm_weight() > 3 Or los > 1 and sep = '01'")       //TODO: doesn not run - shouldn't it?!
     });
-*/
