@@ -27,11 +27,9 @@ There exists two scripts, found under: /src/__test__/
 - **medcodelogic.test.js** (tests the parsing functions)
 - **functions.test.js** (tests the imports from tables.json and variables.json)
 
-Which can be run simply as follows:
+These test scripts can be run easily as follows:
 
 `yarn test` or individually using `yarn test  /src/__test__/functions.test.js`
-
-Um den Parser direkt zu testen (ohne diesen zu initialisieren) könnt ihr nach dem Befehl peggy file.pegjs direkt darauf zugreiffen mit dem Befehl peggy -test wasihrtestenmöchtet
 
 
 ## Frontend / GUI ##
