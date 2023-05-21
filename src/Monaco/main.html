@@ -13,15 +13,12 @@
       language: 'mylang',
       lineNumbers: false,
       defineTheme: 'mylang',
-      minimap: {enabled: false},
-      overviewRulerLanes: 0,
-      scrollbar: {
-        vertical:"hidden",
-        horizontal: "hidden",
-        handleMouseWheel:false,
-      },
+      suggest: {
+        insertMode: 'insertAsSnippet'
+      }
     });
 
+    //define theme
     monaco.editor.defineTheme('mylang', {
         base: 'vs',
         rules: [
@@ -31,7 +28,18 @@
           { token: 'variable', foreground: '#117700' }, // Define the color for the 'variable' token
           { token: 'keyword', foreground: '#00008b' }, // Define the color for the 'keyword' token
           { token: 'function', foreground: '#aa1111' } // Define the color for the 'function' token
-        ]
+        ],
+        colors: {
+          // define color of the autocompletion selector
+          //'editorSuggestWidget.selectedBackground': '#ffaa4a',
+          // define color of the autocompletion box
+          //'editorSuggestWidget.background': '#000000',
+          // define color of the autocompletion selected text
+          //'editorSuggestWidget.selectedForeground': '#000000',
+          
+          // define the text color of the focused item in the autocompletion box
+          'editorSuggestWidget.focusHighlightForeground': '#CCCCCC'
+        }
       });
 
     monaco.editor.setTheme('mylang');
@@ -49,7 +57,7 @@
      * @param delay (number): The amount of time before the editor's content is output. Default is 1 second delay.
      * @param throttleDelay (number): The amount of time before the editor's content is output when typing slowly. Default is 300 milliseconds.
      */
-    function throttleAndDebounce(value, delay = 400, throttleDelay = 300) {
+    function throttleAndDebounceLogEditorValue(value, delay = 400, throttleDelay = 300) {
       // Throttle
       /**
        * This statement checks whether timerId is currently null or not. 
@@ -79,72 +87,76 @@
       }
     }
 
-    let hasError = false;
-
     /** 
-     * 
+     * Checks the content of the editor and marks any errors in the editor with a red underline
+     * Disables the submit button if there is an error in the content, otherwise enables it
      */
     function checkContent(){
-      const content = editor.getValue().trim();
-      const isEmpty = content === ""
-      // Get the error, undefined if no error thrown
-      const error = parseInput(editor.getValue());
-      hasError = error;
-
-      if (isEmpty || !hasError) {
-        clearErrors();
+      // If the editor is empty remove all errors and disable the submit button
+      if (!editor.getValue().trim()) {
+        monaco.editor.setModelMarkers(editor.getModel(), "myMarkerId", []); // Clear Errors
+        submitButton.disabled = true; // Disable the submit button
         return;
       }
 
-      const model = monaco.editor.getModels()[0]; 
-      const severity = monaco.MarkerSeverity.Error; 
-      const message = error.message; 
-      const { line: startLine, column: startColumn } = error.location.start;
-      const { column: endColumn } = error.location.end;
+      // Get the error, undefined if no error thrown
+      error = parseInput(editor.getValue());
 
-      const wordLength = endColumn - startColumn;
+      // If there is an error mark it
+      if(error){
+        // Get the first model of the editor
+        var model = monaco.editor.getModels()[0]; 
 
-      const errorRange = new monaco.Range(
-        startLine, 
-        startColumn, 
-        startLine, 
-        startColumn + wordLength
-      );
+        // Set severity to Error
+        var severity = monaco.MarkerSeverity.Error; 
+        // Use error message as the marker message
+        var message = error.message; 
 
-      monaco.editor.setModelMarkers(model, "myMarkerId", [{
-        severity: severity, 
-        message: message, 
-        startLineNumber: errorRange.startLineNumber, 
-        startColumn: errorRange.startColumn, 
-        endLineNumber: errorRange.endLineNumber, 
-        endColumn: errorRange.endColumn 
-      }]); 
+        // Get the range of the falsy word
+        var lineNumber = error.location.start.line;
+        let columnNumber = error.location.start.column;
+        let wordLength = error.location.end.column - error.location.start.column;
+        let range = new monaco.Range(lineNumber, columnNumber, lineNumber, columnNumber + wordLength); // Create range object for the error
+
+        // Set marker on the model
+        monaco.editor.setModelMarkers(model, "myMarkerId", [{
+          severity: severity, 
+          message: message, 
+          startLineNumber: range.startLineNumber, 
+          startColumn: range.startColumn, 
+          endLineNumber: range.endLineNumber, 
+          endColumn: range.endColumn 
+        }]); 
+
+        // Disable the submit button
+        submitButton.disabled = true; 
+      }
+      else{
+        // Clear Errors
+        monaco.editor.setModelMarkers(editor.getModel(), "myMarkerId", []); 
+        // Enable the submit button
+        submitButton.disabled = false;  
+      }
     }
 
-    function clearErrors(){
-      monaco.editor.setModelMarkers(editor.getModel(), "myMarkerId", []);
-    }
-
+    // Call this method whenever the content of the editor is changed
     editor.onDidChangeModelContent(() => {
-      throttleAndDebounce(editor.getValue());
+      throttleAndDebounceLogEditorValue(editor.getValue());
     });
 
-    const submitBtn = document.getElementById("submitButton");
+    // Get the submit button
+    const submitBtn = document.getElementById("submitButton");  
+    // Add an Eventlistener to the button
     submitBtn.addEventListener("click", () => {
       const content = editor.getValue();
-      const isConfirmed = confirm("There seems to be an error in your code. Do you still want to proceed?")
-
-      if (hasError && !isConfirmed) {
-        return;
-      }
-
       sendContent(content);
     });
-
+  
     // This is a mock, here the content gets sent to the server (Will be changed by enoum)
     function sendContent(content) {
       console.log(content);
     }
+
   });
 </script>
 
@@ -157,7 +169,7 @@
 <div style="border: 3px solid #ccc; padding: 5px; max-width: 600px;">
   <div id="container" style="height: 50px; box-sizing: border-box;"></div> 
   <!-- Submit Button -->
-  <button id = "submitButton">Submit</button>
+  <button id = "submitButton" disabled>Submit</button>
 </div>
 
 <script>
