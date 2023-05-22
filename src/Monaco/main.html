@@ -12,7 +12,10 @@
       value: '',
       language: 'mylang',
       lineNumbers: false,
-      defineTheme: 'mylang'
+      defineTheme: 'mylang',
+      suggest: {
+        insertMode: 'insertAsSnippet'
+      }
     });
 
     //define theme
@@ -25,7 +28,18 @@
           { token: 'variable', foreground: '#117700' }, // Define the color for the 'variable' token
           { token: 'keyword', foreground: '#00008b' }, // Define the color for the 'keyword' token
           { token: 'function', foreground: '#aa1111' } // Define the color for the 'function' token
-        ]
+        ],
+        colors: {
+          // define color of the autocompletion selector
+          //'editorSuggestWidget.selectedBackground': '#ffaa4a',
+          // define color of the autocompletion box
+          //'editorSuggestWidget.background': '#000000',
+          // define color of the autocompletion selected text
+          //'editorSuggestWidget.selectedForeground': '#000000',
+          
+          // define the text color of the focused item in the autocompletion box
+          'editorSuggestWidget.focusHighlightForeground': '#CCCCCC'
+        }
       });
 
     monaco.editor.setTheme('mylang');

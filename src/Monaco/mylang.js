@@ -217,7 +217,8 @@ require(['vs/editor/editor.main'], function() {
     { 
       label: 'inList', 
       kind: monaco.languages.CompletionItemKind.Function,
-      insertText: 'inList()', 
+      insertText: 'inList($0)', 
+      insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
       documentation: [
         'Beschreibung',
         '','Gibt alle Codes zurück, die in beiden Listen enthalten sind.',
@@ -238,7 +239,8 @@ require(['vs/editor/editor.main'], function() {
     { 
       label: 'not', 
       kind: monaco.languages.CompletionItemKind.Function, 
-      insertText: 'not()',
+      insertText: 'not($0)',
+      insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
       documentation: [
         'Beschreibung',
         '','Negiert einen booleschen Wert.',
@@ -259,7 +261,8 @@ require(['vs/editor/editor.main'], function() {
     { 
       label: 'inTable',
       kind: monaco.languages.CompletionItemKind.Function, 
-      insertText: 'inTable()',
+      insertText: 'inTable($0)',
+      insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
       documentation: [
         'Beschreibung',
         '','Gibt alle Codes zurück, die in der Liste und in mindestens einer der Tabellen enthalten sind.',
@@ -281,7 +284,8 @@ require(['vs/editor/editor.main'], function() {
     { 
       label: 'min', 
       kind: monaco.languages.CompletionItemKind.Function, 
-      insertText: 'min()',
+      insertText: 'min($0)',
+      insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
       documentation: [
         'Beschreibung',
         '','Gibt das Minimum in einer Liste zurück.',
@@ -302,7 +306,8 @@ require(['vs/editor/editor.main'], function() {
     { 
       label: 'max', 
       kind: monaco.languages.CompletionItemKind.Function, 
-      insertText: 'max()',
+      insertText: 'max($0)',
+      insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
       documentation: [
         'Beschreibung',
         '','Gibt das Maximum in einer Liste zurück.',
@@ -323,7 +328,8 @@ require(['vs/editor/editor.main'], function() {
     { 
       label: 'dates', 
       kind: monaco.languages.CompletionItemKind.Function, 
-      insertText: 'dates()',
+      insertText: 'dates($0)',
+      insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
       documentation: [
         'Beschreibung',
         '','Gibt das Datum in Tagen für jeden Code (Prozedur) zurück.',
@@ -344,7 +350,8 @@ require(['vs/editor/editor.main'], function() {
     { 
       label: 'date', 
       kind: monaco.languages.CompletionItemKind.Function, 
-      insertText: 'date()',
+      insertText: 'date($0)',
+      insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
       documentation: [
         'Beschreibung',
         '','Parst eine Zeichenfolge in ein Datum.',
@@ -362,7 +369,8 @@ require(['vs/editor/editor.main'], function() {
     { 
       label: 'sides', 
       kind: monaco.languages.CompletionItemKind.Function, 
-      insertText: 'sides()',
+      insertText: 'sides($0)',
+      insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
       documentation: [
         'Beschreibung',
         '','Gibt die Codes zurück, die mit einer bestimmten Seite (Prozedur) angegeben sind.',
