@@ -106,135 +106,256 @@ const arrayToString = (arr) => {
 
 start
 = expression:expression {return arrayToString(expression)}
-//(age = 5 and age = 6) or age = 7 and things like that do not work yet
 
+//Parts of expression may be separated by and, or
 expression
-= paranthesesSimpleExpression _ and_or* _ 
+= fullExpression (_ and_or _ fullExpression )*  
 
-and_or 
-= (('and'i/'or'i) _ paranthesesSimpleExpression _)
+//accepts and, or. Not casesensitive
+and_or =
+('and'i/'or'i)
 
-paranthesesSimpleExpression
-= lparen paranthesesSimpleExpression rparen / simpleExpression
+//Parts of expression may be put in parentheses
+fullExpression
+=  _ simpleExpression _  / (lparen _ expression _ rparen) 
 
+/*Expression may be:
+- A comparison (age_years = 5)
+- A calculation (5 + 5)
+- A function
+- any variable
+- any number
+*/
 simpleExpression
-= (comparison / calculation / inList / inTable / function / variable / number) _
+= (function / comparison / calculation  / variable / number) _
 
+
+/*Comparison may be:
+- comparing dates
+- comparing numbers
+- comparing strings
+- comparing code
+*/
 comparison 
-= ((dateCompare / numberCompare / stringCompare / codeCompare) _ / (lparen (numberCompare / stringCompare / dateCompare) rparen)) _
+= (dateCompare / numberCompare / stringCompare / codeCompare) _  
 
+/*Calculation, may be in parentheses
+*/
 calculation 
-= (numberOrVariableNumber) _ (('+'/'-'/'*'/'/') _ (numberOrVariableNumber))+ _
+= term  (_ ('+'/'-'/'*'/'/') _ term)* 
 
+/*A term may be a calculation or anything with type number
+*/
+term
+= (lparen _ calculation _ rparen) / numberOrVariableNumber / dateOrVariableDate / min_max / sides
+
+/*Compares Strings and String Variables, Strings with Strings and String Variable with String Variable
+*/
 stringCompare
 = (stringOrVariableString _ operator _ stringOrVariableString) 
 
+/*Compares Numbers and Number Variables, Numbers with Numbers and Number Variables with Number Variables
+*/
 numberCompare
-= ((calculation / numberOrVariableNumber) _ operator _ (calculation / numberOrVariableNumber))
+= (numberType _ operator _ numberType)
 
+/*Compares Dates and Date Variables, Dates with Dates and Date Variables with Date Variable
+*/
 dateCompare
 = (dateOrVariableDate _ operator _ dateOrVariableDate)
 
+/*Compares Code with Code Variables, Code with Code and Code Variables with Code Variables
+*/
 codeCompare
 = (codeOrVariableCode _ operator _ codeOrVariableCode)
 
-//old version: inList = variable _ ('not' / "") _ 'in list' _ codeList
+/*
+A function may be:
+- inList
+- inTable
+- min
+- max
+- where
+- not
+- empty
+- dates
+- lookup
+*/
+function 
+= (inList / inTable/ min_max / where / sides / not / empty / dates / lookup)
+
+/*Function in List
+Expects a variable of type code first, then "in list", then a list of codes in parantheses. "in list" is not case sensitive
+*/
 inList
-= variableCode _ ('not' / "") _ 'in list' _ codeList
+= variableCode _ ('not' / "") _ 'in'i _'list'i _ codeList
 
-inTable
-= variable _ ('not' / "") _ 'in table' _ tableList _
+/*Function in Table
+Expects a variable first, then "in table", then a list of tables in parantheses. "in table" is not case sensitive
+*/
+inTable 
+= variable _ ('not' / "") _ 'in'i_' table'i _ tableList _
 
-function
-= (("'")* _ Date _ ("'")* / min_max / where / sides / not / empty / dates / lookup) _
-
+/*Functions min and max
+Expects "min" or "max", then a list of numberTypes
+*/
 min_max
-= ('min'/'max') _ lparen _ list _ rparen _
+= ('min'/'max') _ lparen _ numberList _ rparen _
 
+/*Function where
+Expects a variable or a function, then "where", then a comparison in parentheses
+*/
 where
-= variable _ 'where' _ comparison _
+= variable _ 'where'i _ lparen _ comparison _ rparen _
 
+/*Function sides
+Expects 'sides', then a any expression, then a ",", then either 'L', 'R', 'B' in parentheses
+*/
 sides
-= 'sides' _ lparen _ list _ ',' _ ('L' / 'R' / 'B') _ rparen _
+= 'sides'i _ lparen _ alwaysMatch _ ',' _  "'" ('L'i / 'R'i / 'B'i) "'"_ rparen _
 
+/*Function not
+Expects "not", then a comparison in parentheses
+*/
 not
-= _'not' _ comparison _
+= _'not'i _ lparen _ comparison _ rparen _
 
-list
-= 'list' _ lparen alwaysMatch rparen
-
+/*Function empty
+Expects "empty", then a comparison in parentheses
+*/
 empty
-= 'empty' _ lparen alwaysMatch rparen
+= 'empty'i _ lparen comparison rparen
 
+/*Function dates
+Expects "dates", then any value in parantheses
+*/
 dates
-= 'dates' _ lparen alwaysMatch rparen
+= 'dates'i _ lparen alwaysMatch rparen
 
-//lookup accepts any strings in between parantheses, the strings may be separated by spaces
+/*Function lookup 
+accepts any strings in between parantheses, the strings may be separated by spaces
+*/
 lookup 
-= 'lookup' _ lparen (alwaysMatch _ )* rparen
+= 'lookup'i _ lparen (alwaysMatch _ )* rparen
 
-//old version: codeList = = lparen _ (number / string / code) (_ ',' _ number / string / code)* _ rparen
+/*Number List
+Accepts a list of number Types separated by ","
+*/
+numberList
+= numberType (_ ',' _ numberType)*
+
+/*Number List
+Accepts a list of codes Types separated by ","
+*/
 codeList
 = lparen _ code (_ ',' _ code)* _ rparen
 
+/*Number List
+Accepts a list of tables Types separated by ","
+*/
 tableList
 = lparen _ table  (_ ',' _ table _ )* _ rparen
 
+/*Variable
+Checks wether it is a variable of any type
+*/
 variable
 = ((variableDate / variableNumber / variableString / variableCode) _) / (lparen (variableDate / variableNumber / variableString / variableCode) rparen _ )
 
+/*Either a number or a number variable
+*/
 numberOrVariableNumber
 = ((variableNumber / number) _) / (lparen (variableNumber / number) rparen _)
 
+/*Either a string or a string variable
+*/
 stringOrVariableString
 = ((variableString / string) _) / (lparen (variableString / string) rparen _)
 
+/*Either a date or a string variable
+*/
 dateOrVariableDate
-= ((variableDate / ("'")* _ Date _("'")* _) _) / (lparen (variableDate / ("'")*_ Date _ ("'")*) rparen _)
+= ((variableDate / date) _) / (lparen (variableDate / date) rparen _)
 
+/*Either a code or a code variable
+*/
 codeOrVariableCode
 = ((variableCode / code) _) / (lparen (variableCode / code) rparen _)
 
+/*Checks whether it is a string variable
+*/
 variableString
 = variableName: alwaysMatch &{return isStringVariable(variableName) } {return arrayToString(variableName)} 
 
+/*Checks whether it is a number variable
+*/
 variableNumber
 = variableName: alwaysMatch &{return isNumberVariable(variableName) } {return arrayToString(variableName)}
 
+/*Checks whether it is a date variable
+*/
 variableDate
 = variableName: alwaysMatch &{return isDateVariable(variableName) } {return arrayToString(variableName)}
 
+/*Checks whether it is a code variable
+*/
 variableCode
 = variableName: alwaysMatch &{return isCodeVariable(variableName) } {return arrayToString(variableName)}
 
+/*Types that can be used as a number
+*/
+numberType
+= numberOrVariableNumber / dateOrVariableDate / min_max / sides /  calculation / dates
+
+/*Format in which string should be written: Any letters with ' around them
+*/
 string
 = "'" [_a-zA-Z]* "'" _
 
+/*Format in which numbers should be written: Any numbers
+*/
 number
 = digits:([0-9]+) _ 
 
-Date
-= digits:([12][0-9]|3|([0][1-9]/[1][0-2])([0][1-9]/[12][0-9]/[3][01])) _ {return arrayToString(digits)}
+/*Format in which date should be written: Either 8 numbers or 'date', then left parentheses, then ", then 8 numbers, then ", then right parentheses
+*/
+date
+= digits:([12][0-9]|3|([0][1-9]/[1][0-2])([0][1-9]/[12][0-9]/[3][01])) _ {return arrayToString(digits)} / 'date' lparen '"' [12][0-9]|3|([0][1-9]/[1][0-2])([0][1-9]/[12][0-9]/[3][01]) '"'rparen
 
 
+/*Format in which code should be written: Any letters or numbers
+*/
 code
 =  ([a-zA-Z0-9*][.a-zA-Z0-9*]*) _
 
+/*Possible operators: >=, <=, >, <, =, !=
+*/
 operator
 = ('>=' / '<=' / '>' / '<' / '=' / '!=') _
 
 table
 = tableName:alwaysMatch &{return isInTable(tableName)} {return tableName}
 
+/*
+Defines left Parentheses
+*/
 lparen
 = '(' _
 
+/*
+Defines right Parentheses
+*/
 rparen
 = ')' _
 
-//space rule
+/*
+Defines space
+*/
 _
 = (" " / [\t\n\r])*
 
+/*
+Matches anything
+*/
 alwaysMatch
 = [0-9a-zA-Z_]+
