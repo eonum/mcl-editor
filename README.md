@@ -63,10 +63,16 @@ The submit button is disabled as long as there is no content or an error. Pressi
 
 ## Setup
 ### Monaco Editor
-https://microsoft.github.io/monaco-editor/monarch.html
 
 Running the `/Monaco/main.html` requires the "live server" extension.
-To run it: right click `/Monaco/main.html` and click open with live server.
+#### Live Server Installation
+Open VSCode and type in `live server` in the extension search bar (Ctrl + Shift + X) and click install.
+
+Alternatively:
+Open VSCode, type ctrl+P, and then type: 
+`ext install ritwickdey.liveserver`
+
+After Installation right click the main.html file and select `Open with Live Server` to run it.
 
 ### Development
 Use `yarn` command to install all packages and dependencies from package.json.
